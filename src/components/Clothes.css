@@ -1,0 +1,51 @@
+.allClothes {
+  margin: 50px auto;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 45px;
+  text-align: center;
+}
+
+.eachClothe {
+  width: 20%;
+  min-width: 200px;
+  box-shadow: 5px 5px 5px var(--shadow-color);
+  position: relative;
+  padding: 30px;
+}
+
+.eachClothe:hover {
+  transform: scale(1.1);
+  transition: transform 330ms ease-in-out;
+}
+
+.clotheName {
+  font-size: 1em;
+  font-weight: initial;
+}
+
+.clotheDescr {
+  text-align: justify;
+}
+
+.clotheImage {
+  height: 100px;
+}
+
+.clothePrice {
+  display: inline-block;
+  font-size: 1.2em;
+  font-weight: bold;
+  background-color: var(--price-color);
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+
+.clotheLogo {
+  width: 10%;
+  position: absolute;
+  left: 10px;
+  top: 10px;
+}

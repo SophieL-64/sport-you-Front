@@ -1,0 +1,28 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px;
+  background-color: var(--main-bg-color);
+}
+
+.navlist {
+  list-style: none;
+  display: flex;
+  justify-content: flex-end;
+  gap: 20%;
+  color: white;
+  font-weight: bold;
+  font-size: 1.2em;
+  padding-right: 10px;
+}
+
+.navLink:link,
+.navLink:visited {
+  text-decoration: none;
+  color: white;
+}
+
+.navLink:hover {
+  color: var(--price-color);
+}
