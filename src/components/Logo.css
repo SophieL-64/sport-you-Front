@@ -1,3 +1,20 @@
+@font-face {
+  font-family: "American_Captain";
+  src: url("../assets/font/American_Captain.ttf") format("ttf"),
+    url("../assets/font/American_Captain.otf") format("ptf");
+}
+
 .logo {
-  width: 5em;
+  color: white;
+  text-decoration: none;
+  font-style: italic;
+  font-size: 2em;
+  font-family: "American_Captain";
+}
+
+a,
+a:active,
+a:visited {
+  color: white;
+  text-decoration: none;
 }

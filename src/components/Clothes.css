@@ -1,5 +1,5 @@
 .allClothes {
-  margin: 50px auto;
+  padding: 20px;
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
@@ -10,7 +10,7 @@
 .eachClothe {
   width: 20%;
   min-width: 200px;
-  box-shadow: 5px 5px 5px var(--shadow-color);
+  box-shadow: 0 5px 16px var(--shadow-color);
   position: relative;
   padding: 30px;
 }
@@ -41,6 +41,7 @@
   position: absolute;
   right: 10px;
   top: 10px;
+  padding: 2px 5px;
 }
 
 .clotheLogo {

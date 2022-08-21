@@ -17,6 +17,9 @@ const Navbar = () => {
     <nav className="navbar">
       <Logo />
       <ul className="navlist">
+        <a href="/" className="navLink">
+          <li className="navItem">Accueil</li>
+        </a>
         {sections &&
           sections.map((section) => (
             <a href={`/section/${section.id}`} className="navLink">

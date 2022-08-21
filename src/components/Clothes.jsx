@@ -1,13 +1,27 @@
-// import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
+import { Modal } from "./Modal";
 import "./Clothes.css";
 
 const Clothes = (props) => {
-  const { clothes } = props;
+  const { result } = props;
+
+  const [showModal, setShowModal] = useState(false);
+  const [id, setId] = useState(null);
+  const openModal = () => {
+    setShowModal((prev) => !prev);
+  };
 
   return (
     <div className="allClothes">
-      {clothes.map((clothe) => (
-        <div className="eachClothe">
+      {result.map((clothe) => (
+        <div
+          className="eachClothe"
+          onClick={() => {
+            console.log("id", clothe.id);
+            setId(clothe.id);
+            openModal();
+          }}
+        >
           <img
             src={require(`../assets/clothes/${clothe.image}`)}
             alt={clothe.name}
@@ -24,6 +38,7 @@ const Clothes = (props) => {
           </div>
         </div>
       ))}
+      <Modal showModal={showModal} setShowModal={setShowModal} id={id} />
     </div>
   );
 };

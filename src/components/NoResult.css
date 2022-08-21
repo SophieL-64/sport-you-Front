@@ -1,0 +1,7 @@
+.noResult {
+  color: var(--main-bg-color);
+  font-weight: bold;
+  font-size: 3em;
+  text-align: center;
+  padding-top: 5em;
+}

@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import Clothes from "../components/Clothes";
 import axios from "axios";
 import "./Section.css";
+import Searchbar from "../components/Searchbar";
 
 const Section = () => {
   let params = useParams();
@@ -15,7 +16,7 @@ const Section = () => {
       .then((res) => setClothesSection(res.data));
   }, []);
 
-  return <>{clothesSection && <Clothes clothes={clothesSection} />}</>;
+  return <>{clothesSection && <Clothes result={clothesSection} />}</>;
 };
 
 export default Section;

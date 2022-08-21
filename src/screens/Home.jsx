@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Clothes from "../components/Clothes";
+import Searchbar from "../components/Searchbar";
+import "./Home.css";
 
 const Home = () => {
   const [clothes, setClothes] = useState([]);
@@ -12,7 +14,7 @@ const Home = () => {
   }, []);
   return (
     <>
-      <div className="home">{clothes && <Clothes clothes={clothes} />}</div>
+      <div className="search">{clothes && <Searchbar clothes={clothes} />}</div>
     </>
   );
 };
