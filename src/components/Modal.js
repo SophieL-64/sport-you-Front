@@ -3,7 +3,7 @@ import { useCallback } from "react";
 import styled from "styled-components";
 import { MdClose } from "react-icons/md";
 import axios from "axios";
-// import { useParams } from "react-router-dom";
+import { FaShoppingBasket } from "react-icons/fa";
 
 const Background = styled.div`
   width: 100%;
@@ -85,6 +85,7 @@ const ModalContent = styled.div`
 
   .criteriaContainer {
     display: flex;
+    height: 50%;
     gap: 15px;
   }
 
@@ -93,8 +94,27 @@ const ModalContent = styled.div`
     height: 50%;
   }
 
+  .colorClicked {
+    border: 1px solid red;
+    padding: 3px;
+  }
+
+  .sizeClicked {
+    border: 1px solid red;
+  }
+
   .sizes {
     font-weight: bold;
+    width: 50%;
+    height: 50%;
+  }
+
+  .basket {
+    color: #3a91c0;
+    font-size: 2em;
+    position: absolute;
+    bottom: 15px;
+    left: calc(75%-2em);
   }
 `;
 
@@ -114,6 +134,8 @@ export const Modal = (props) => {
   const [clothe, setClothe] = useState([]);
   const [colors, setColors] = useState([]);
   const [sizes, setSizes] = useState([]);
+  const [sizeActivated, setSizeActivated] = useState(0);
+  const [colorActivated, setColorActivated] = useState(0);
 
   const modalRef = useRef();
 
@@ -155,6 +177,9 @@ export const Modal = (props) => {
     return () => document.removeEventListener("keydown", keyPress);
   }, [keyPress]);
 
+  const handleSizeClick = (id) => setSizeActivated(id);
+  const handleColorClick = (id) => setColorActivated(id);
+
   return (
     <>
       {clothe && showModal && (
@@ -180,17 +205,32 @@ export const Modal = (props) => {
                     <img
                       src={require(`../assets/colors/${color.colorImage}`)}
                       alt={color.color}
-                      className="colorSquare"
+                      onClick={() => handleColorClick(color.id)}
+                      className={
+                        colorActivated === color.id
+                          ? "colorSquare + colorClicked"
+                          : "colorSquare"
+                      }
                     ></img>
                   ))}
               </div>
               <p className="clotheCriteriaModal">Tailles disponibles</p>
               <div className="criteriaContainer">
                 {sizes &&
-                  sizes.map((size) => <p className="sizes">{size.size}</p>)}
+                  sizes.map((size) => (
+                    <p
+                      onClick={() => handleSizeClick(size.id)}
+                      className={
+                        sizeActivated === size.id
+                          ? "sizes + sizeClicked"
+                          : "sizes"
+                      }
+                    >
+                      {size.size}
+                    </p>
+                  ))}
               </div>
-
-              {/* <button>Try Now</button> */}
+              <FaShoppingBasket className="basket" />
             </ModalContent>
             <CloseModalButton
               aria-label="Close modal"

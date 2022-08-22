@@ -12,7 +12,9 @@ const Clothes = (props) => {
   };
 
   return (
-    <div className="allClothes">
+    <div
+      className={showModal ? "allClothes + allClothesWhenModal" : "allClothes"}
+    >
       {result.map((clothe) => (
         <div
           className="eachClothe"
