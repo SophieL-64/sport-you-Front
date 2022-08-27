@@ -1,0 +1,211 @@
+.shoppingTitles {
+  margin: 30px 0;
+  display: flex;
+  justify-content: space-around;
+  padding: 30px 15px;
+  font-weight: bold;
+  text-align: center;
+  background-color: var(--second-color);
+}
+.shoppingTitles p:nth-child(1) {
+  width: 300px;
+}
+
+.shoppingTitles p:nth-child(2) {
+  width: 80px;
+}
+.shoppingTitles p:nth-child(3) {
+  width: 200px;
+}
+.shoppingTitles p:nth-child(4) {
+  width: 50px;
+}
+.shoppingTitles p:nth-child(5) {
+  width: 200px;
+}
+.shoppingTitles p:nth-child(6) {
+  width: 200px;
+}
+.shoppingTitles p:nth-child(7) {
+  width: 100px;
+}
+.shoppingTitles p:nth-child(8) {
+  width: 200px;
+}
+
+.allClothesPurchased {
+  display: flex;
+  flex-direction: column;
+
+  gap: 30px;
+}
+
+.eachClothesPurchased {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border: 1px solid white;
+  box-shadow: 0 5px 16px var(--shadow-color);
+  padding: 5px 15px;
+  /* margin: 0 auto 20px; */
+}
+
+.clotheName {
+  width: 300px;
+  font-size: 1.2em;
+}
+
+.clotheImage {
+  width: 80px;
+  height: auto;
+}
+
+.clotheSize {
+  width: 200px;
+  font-size: 1.2em;
+  text-align: center;
+}
+
+.clotheColor {
+  width: 50px;
+  border-radius: 5px;
+}
+
+.clothePriceUnit {
+  width: 200px;
+  text-align: center;
+  font-size: 1.2em;
+}
+
+.clotheQuantity {
+  width: 200px;
+  text-align: center;
+  font-size: 1.2em;
+  position: relative;
+}
+
+.clotheTotalPrice {
+  width: 200px;
+  text-align: center;
+  font-size: 1.2em;
+}
+
+.quantityChg {
+  background-color: var(--main-bg-color);
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  padding: 12px;
+}
+
+.quantityChg:hover,
+.clotheName:hover,
+.clotheImage:hover,
+.clotheSize:hover,
+.clotheColor:hover,
+.trash:hover,
+.confirm:hover,
+.abort:hover {
+  cursor: pointer;
+}
+
+.plus {
+  position: absolute;
+  bottom: 0;
+  right: 50px;
+}
+
+.moins {
+  position: absolute;
+  bottom: 0;
+  left: 50px;
+}
+
+.trash {
+  width: 100px;
+  font-size: 2em;
+  color: var(--main-bg-color);
+  padding: 5px;
+}
+
+.clothesTotalPrice {
+  height: 50px;
+  background-color: var(--second-color);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 30px;
+}
+
+.clothePriceLabel {
+  font-size: 1.6em;
+  text-align: right;
+  padding: 10px 50px;
+}
+
+.clotheTotalAmount {
+  font-weight: bold;
+  font-size: 1.6em;
+  text-align: right;
+  padding: 10px 50px;
+}
+
+.alertShop {
+  padding: 20px;
+  background-color: var(--second-color);
+  color: white;
+  z-index: 1;
+  text-align: center;
+  width: 600px;
+  border-radius: 5px;
+  align-self: center;
+}
+
+.closebtn {
+  margin-left: 15px;
+  color: white;
+  font-weight: bold;
+  float: right;
+  font-size: 22px;
+  line-height: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.closed {
+  display: none;
+}
+
+.closebtn:hover {
+  color: black;
+}
+
+.checkChoice {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0;
+  font-weight: bold;
+}
+
+.confirm:hover {
+  color: green;
+}
+
+.abort:hover {
+  color: red;
+}
+
+.abort,
+.confirm {
+  padding: 5px 10px;
+}
+
+.shopEmptyMessage {
+  color: var(--second-color);
+  font-size: 2em;
+  text-align: center;
+  margin: 100px auto 100px;
+}

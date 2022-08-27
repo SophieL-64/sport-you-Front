@@ -24,5 +24,29 @@
 }
 
 .navLink:hover {
-  color: var(--price-color);
+  color: var(--second-color);
+}
+
+.basket {
+  color: white;
+  font-size: 2em;
+}
+
+.basketCart {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.itemsCount {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 10px;
+  width: 20px;
+  height: 20px;
+  background-color: red;
+  text-align: center;
+  font-size: 0.8em;
 }

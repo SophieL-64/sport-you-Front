@@ -38,10 +38,11 @@
 }
 
 .clothePrice {
+  border-radius: 5px;
   display: inline-block;
   font-size: 1.2em;
   font-weight: bold;
-  background-color: var(--price-color);
+  background-color: var(--second-color);
   position: absolute;
   right: 10px;
   top: 10px;

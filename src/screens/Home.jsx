@@ -6,16 +6,29 @@ import "./Home.css";
 
 const Home = () => {
   const [clothes, setClothes] = useState([]);
+  const [searchInput, setSearchInput] = useState("");
+  const [clothesSearched, setClothesSearched] = useState([]);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/clothes")
-      .then((res) => setClothes(res.data));
+    axios.get("http://localhost:5000/clothes").then((res) => {
+      setClothes(res.data);
+      setClothesSearched(res.data);
+    });
   }, []);
+
   return (
-    <>
-      <div className="search">{clothes && <Searchbar clothes={clothes} />}</div>
-    </>
+    clothes.length && (
+      <>
+        <Searchbar
+          clothes={clothes}
+          clothesSearched={clothesSearched}
+          setClothesSearched={setClothesSearched}
+          searchInput={searchInput}
+          setSearchInput={setSearchInput}
+        />
+        <Clothes clothes={clothesSearched} />
+      </>
+    )
   );
 };
 export default Home;

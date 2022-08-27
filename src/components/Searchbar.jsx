@@ -1,38 +1,25 @@
 import { useEffect, useState } from "react";
-import Clothes from "./Clothes";
 import NoResult from "./NoResult";
 import "./Searchbar.css";
 
 const Searchbar = (props) => {
-  const { clothes } = props;
-  const [searchInput, setSearchInput] = useState("");
-  const [result, setResult] = useState([]);
-  const [noResult, setNoResult] = useState(false);
+  const { clothes, setClothesSearched, searchInput, setSearchInput } = props;
 
   const searchlaunching = (e) => {
     setSearchInput(e.target.value);
   };
 
   useEffect(() => {
-    const filterResult =
-      searchInput !== ""
-        ? clothes.filter(
-            (clothe) =>
-              clothe.name.toLowerCase().includes(searchInput.toLowerCase()) ||
-              clothe.description
-                .toLowerCase()
-                .includes(searchInput.toLowerCase()) ||
-              clothe.brand.toLowerCase().includes(searchInput.toLowerCase())
-          )
-        : [];
-    setResult(
-      filterResult.length
-        ? filterResult
-        : searchInput !== ""
-        ? setNoResult(true)
-        : clothes
+    const filteredClothes = clothes.filter(
+      (clothe) =>
+        (searchInput !== "" &&
+          clothe.name.toLowerCase().includes(searchInput.toLowerCase())) ||
+        clothe.description.toLowerCase().includes(searchInput.toLowerCase()) ||
+        clothe.brand.toLowerCase().includes(searchInput.toLowerCase())
     );
-  }, [clothes, searchInput]);
+
+    setClothesSearched(filteredClothes);
+  }, [searchInput]);
 
   return (
     <>
@@ -48,7 +35,6 @@ const Searchbar = (props) => {
           className="searchInput"
         />
       </div>
-      {noResult ? <NoResult /> : <Clothes result={result} />}
     </>
   );
 };

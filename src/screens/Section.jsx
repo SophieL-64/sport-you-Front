@@ -8,15 +8,30 @@ import Searchbar from "../components/Searchbar";
 const Section = () => {
   let params = useParams();
   let { id } = params;
-  const [clothesSection, setClothesSection] = useState(null);
+
+  const [clothes, setClothes] = useState([]);
+  const [searchInput, setSearchInput] = useState("");
+  const [clothesSearched, setClothesSearched] = useState([]);
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:5000/sections/${id}`)
-      .then((res) => setClothesSection(res.data));
+    axios.get(`http://localhost:5000/sections/${id}`).then((res) => {
+      setClothes(res.data);
+      setClothesSearched(res.data);
+    });
   }, []);
 
-  return <>{clothesSection && <Clothes result={clothesSection} />}</>;
+  return (
+    <>
+      <Searchbar
+        clothes={clothes}
+        clothesSearched={clothesSearched}
+        setClothesSearched={setClothesSearched}
+        searchInput={searchInput}
+        setSearchInput={setSearchInput}
+      />
+      <Clothes clothes={clothesSearched} />
+    </>
+  );
 };
 
 export default Section;
