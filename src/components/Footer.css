@@ -1,0 +1,25 @@
+.footer {
+  margin-top: 50px;
+  display: flex;
+  justify-content: center;
+  gap: 5vw;
+  padding: 50px 10vw;
+  background-color: var(--second-bg-color);
+  color: white;
+}
+
+.footer-section {
+  display: flex;
+  flex-direction: column;
+  width: 25vw;
+  gap: 20px;
+}
+
+.footer-sections {
+  list-style: none;
+}
+
+.footer-social {
+  display: flex;
+  gap: 1vw;
+}

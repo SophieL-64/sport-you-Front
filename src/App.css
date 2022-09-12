@@ -3,6 +3,7 @@
   padding: 0;
   box-sizing: border-box;
   --main-bg-color: #3a91c0;
+  --second-bg-color: #83aec4;
   --shadow-color: rgba(0, 0, 0, 0.2);
   --second-color: #ffbb00;
 }

@@ -1,0 +1,7 @@
+.form {
+  margin: 30vh;
+  text-align: center;
+  color: var(--main-bg-color);
+  font-weight: bold;
+  font-size: 3rem;
+}

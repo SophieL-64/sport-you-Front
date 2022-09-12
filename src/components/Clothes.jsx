@@ -4,13 +4,17 @@ import "./Clothes.css";
 import NoResult from "./NoResult";
 
 const Clothes = (props) => {
-  const { clothes } = props;
+  const { clothes, totalItems, setTotalItems, getNumberProduct } = props;
 
   const [showModal, setShowModal] = useState(false);
   const [id, setId] = useState(null);
   const openModal = () => {
     setShowModal((prev) => !prev);
   };
+
+  useEffect(() => {
+    console.log("chaton");
+  }, [showModal]);
 
   return (
     <div
@@ -19,6 +23,7 @@ const Clothes = (props) => {
       {clothes.length ? (
         clothes.map((clothe) => (
           <div
+            key={clothe.id}
             className="eachClothe"
             onClick={() => {
               console.log("id", clothe.id);
@@ -47,7 +52,14 @@ const Clothes = (props) => {
       )}
 
       {showModal && (
-        <Modal showModal={showModal} setShowModal={setShowModal} id={id} />
+        <Modal
+          showModal={showModal}
+          setShowModal={setShowModal}
+          id={id}
+          totalItems={totalItems}
+          setTotalItems={setTotalItems}
+          getNumberProduct={getNumberProduct}
+        />
       )}
     </div>
   );

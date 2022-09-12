@@ -10,6 +10,11 @@ const Background = styled.div`
   height: 100%;
   background: rgba(78, 74, 74, 0.6);
   position: fixed;
+  // position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -114,9 +119,6 @@ const ModalContent = styled.div`
   .basket {
     color: #3a91c0;
     font-size: 2em;
-    position: absolute;
-    bottom: 15px;
-    left: calc(75%-2em);
   }
 
   .basket:hover {
@@ -151,6 +153,31 @@ const ModalContent = styled.div`
   .closebtn:hover {
     color: black;
   }
+
+  .itemCount {
+    position: absolute;
+    bottom: 20px;
+    left: -5px;
+    border-radius: 10px;
+    width: 20px;
+    height: 20px;
+    background-color: red;
+    text-align: center;
+    font-size: 0.8em;
+    color: white;
+    font-weight: bold;
+  }
+
+  .itemShop {
+    position: relative;
+    position: absolute;
+    bottom: 15px;
+    left: calc(75%-2em);
+  }
+
+  .inactif {
+    display: none;
+  }
 `;
 
 const CloseModalButton = styled(MdClose)`
@@ -165,13 +192,14 @@ const CloseModalButton = styled(MdClose)`
 `;
 
 export const Modal = (props) => {
-  const { showModal, setShowModal, id } = props;
+  const { showModal, setShowModal, id, totalItems, setTotalItems } = props;
   const [clothe, setClothe] = useState(null);
   const [colors, setColors] = useState([]);
   const [sizes, setSizes] = useState([]);
 
   const [sizeActivated, setSizeActivated] = useState(0);
   const [colorActivated, setColorActivated] = useState(0);
+  const [numberClothe, setNumberClothe] = useState(0);
 
   //LOCAL STORAGE -------------------->
 
@@ -194,16 +222,28 @@ export const Modal = (props) => {
     let basket = getBasket();
     let foundProduct = basket.find(
       (p) =>
-        p.id == product.id && p.size == product.size && p.color == product.color
+        p.id === product.id &&
+        p.size === product.size &&
+        p.color === product.color
     );
-    if (foundProduct != undefined) {
+    if (foundProduct !== undefined) {
       foundProduct.quantity++;
     } else {
       product.quantity = 1;
       basket.push(product);
     }
     saveBasket(basket);
-    window.location.reload();
+  }
+
+  function getNumberProductPerArticle() {
+    // console.log("id", id);
+    let basket = getBasket();
+    let number = 0;
+    for (let product of basket) {
+      if (product.clothe === id) {
+        setNumberClothe((number += product.quantity));
+      }
+    }
   }
 
   // <--------------- BASKET MANAGEMENT GENERIC FUNCTIONS
@@ -212,16 +252,20 @@ export const Modal = (props) => {
   const handleColorClick = (id) => setColorActivated(id);
 
   function handleShopOnClick() {
-    document.getElementById("close").classList.remove("closed");
-    getBasket();
-    addBasket({
-      clothe: clothe.id,
-      color: colorActivated,
-      size: sizeActivated,
-      price: clothe.price,
-    });
-
-    // AJOUTER ICI fonctions
+    if (sizeActivated !== 0 && colorActivated !== 0) {
+      document.getElementById("closeOk").classList.remove("closed");
+      getBasket();
+      addBasket({
+        clothe: clothe.id,
+        color: colorActivated,
+        size: sizeActivated,
+        price: clothe.price,
+      });
+      getNumberProductPerArticle();
+      setTotalItems((prev) => prev + 1);
+    } else {
+      document.getElementById("closeNotOk").classList.remove("closed");
+    }
   }
 
   // <--------------- LOCAL STORAGE
@@ -234,41 +278,57 @@ export const Modal = (props) => {
     axios
       .get(`http://localhost:5000/clothes${urlId}`)
       .then((res) => setClothe(res.data[0]));
-  }, [id]);
+  }, [urlId]);
 
   useEffect(() => {
     axios
       .get(`http://localhost:5000/colors${urlId}`)
       .then((res) => setColors(res.data));
-  }, [id]);
+  }, [urlId]);
 
   useEffect(() => {
     axios
       .get(`http://localhost:5000/sizes${urlId}`)
       .then((res) => setSizes(res.data));
-  }, [id]);
+  }, [urlId]);
+
+  useEffect(() => {
+    getNumberProductPerArticle();
+  });
 
   // fermer le modal quand on clique en-dehors de la fenêtre
   const closeModal = (e) => {
     modalRef.current === e.target && setShowModal(false);
+    console.log(showModal);
   };
 
   // fermer le modal avec touche Echap du clavier
-  const keyPress = useCallback(
-    (e) => {
-      e.key === "Escape" && showModal && setShowModal(false);
-    },
-    [setShowModal, showModal]
-  );
-
+  // eslint-disable-next-line
+  const keyPress = useCallback((e) => {
+    e.key === "Escape" && setShowModal(false);
+  });
+  // console.log(showModal)
   useEffect(() => {
     document.addEventListener("keydown", keyPress);
     return () => document.removeEventListener("keydown", keyPress);
   }, [keyPress]);
 
-  console.log("clothe", clothe);
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    // console.log("avant");
+    return () => {
+      // console.log("après");
+      document.body.style.overflow = "initial";
+    };
+  }, [totalItems]);
 
-  const close = () => document.getElementById("close").classList.add("closed");
+  // console.log("clothe", clothe);
+  // console.log("showModal", showModal);
+
+  const closeOk = () =>
+    document.getElementById("closeOk").classList.add("closed");
+  const closeNotOk = () =>
+    document.getElementById("closeNotOk").classList.add("closed");
 
   return (
     <>
@@ -295,6 +355,7 @@ export const Modal = (props) => {
                     <img
                       src={require(`../assets/colors/${color.colorImage}`)}
                       alt={color.color}
+                      key={color.id}
                       id="color"
                       onClick={() => handleColorClick(color.id)}
                       className={
@@ -311,6 +372,7 @@ export const Modal = (props) => {
                   sizes.map((size, key) => (
                     <p
                       onClick={() => handleSizeClick(size.id)}
+                      key={size.id}
                       id="size"
                       className={
                         sizeActivated === size.id
@@ -322,19 +384,33 @@ export const Modal = (props) => {
                     </p>
                   ))}
               </div>
-              <FaShoppingBasket
-                className="basket"
-                onClick={handleShopOnClick}
-                id="shopNow"
-              />
-              <div className="alert closed" id="close" onClick={close}>
+              <div className="itemShop">
+                <FaShoppingBasket
+                  className="basket"
+                  onClick={handleShopOnClick}
+                  id="shopNow"
+                />
+                <p className={numberClothe === 0 ? "inactif" : "itemCount"}>
+                  {numberClothe}
+                </p>
+              </div>
+
+              <div className="alert closed" id="closeOk" onClick={closeOk}>
                 <span className="closebtn">&times;</span>
                 Votre article a bien été ajouté au panier!
+              </div>
+              <div
+                className="alert closed"
+                id="closeNotOk"
+                onClick={closeNotOk}
+              >
+                <span className="closebtn">&times;</span>
+                Merci de sélectionner un coloris et une taille
               </div>
             </ModalContent>
             <CloseModalButton
               aria-label="Close modal"
-              onClick={() => setShowModal((prev) => !prev)}
+              onClick={() => setShowModal(false)}
             />
           </ModalWrapper>
         </Background>

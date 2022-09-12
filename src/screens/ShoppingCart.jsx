@@ -4,13 +4,18 @@ import axios from "axios";
 import "./ShoppingCart.css";
 import { FaTrash } from "react-icons/fa";
 
-const ShoppingCart = () => {
+const ShoppingCart = (props) => {
+  const { setTotalItems } = props;
+
   const [clothes, setClothes] = useState(null);
   const [colors, setColors] = useState([]);
   const [sizes, setSizes] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [basket, setBasket] = useState([]);
+  const [modalId, setModalId] = useState();
 
-  const openModal = () => {
+  const openModal = (id) => {
+    setModalId(id);
     setShowModal((prev) => !prev);
   };
 
@@ -30,56 +35,64 @@ const ShoppingCart = () => {
     axios.get(`http://localhost:5000/sizes`).then((res) => setSizes(res.data));
   }, []);
 
+  useEffect(() => {
+    getBasket();
+  }, []);
+
   // fonctions local storage--------------->
 
-  function saveBasket(basket) {
-    localStorage.setItem("basket", JSON.stringify(basket));
+  function saveBasket(basketLS) {
+    localStorage.setItem("basket", JSON.stringify(basketLS));
   }
 
   function getBasket() {
-    let basket = localStorage.getItem("basket");
-    if (basket == null) {
-      return [];
+    let basketLS = localStorage.getItem("basket");
+    if (basketLS == null) {
+      setBasket([]);
     } else {
-      return JSON.parse(basket);
+      setBasket(JSON.parse(basketLS));
     }
   }
 
   function removeFromBasket(product) {
-    let basket = getBasket();
-    basket = basket.filter(
+    console.log("basket State", basket);
+    console.log("product", product);
+    let basketLS = basket;
+    console.log("basketLS avant filtre", basketLS);
+    basketLS = basketLS.filter(
       (p) =>
-        p.clothe != product.clothe ||
-        p.color != product.color ||
-        p.size != product.size
+        p.clothe !== product.clothe ||
+        p.color !== product.color ||
+        p.size !== product.size
     );
-
-    saveBasket(basket);
-    window.location.reload();
+    console.log("basketLS après filtre", basketLS);
+    saveBasket(basketLS);
+    setBasket(basketLS);
+    setTotalItems((prev) => prev - product.quantity);
   }
 
   function changeQuantity(product, quantity) {
-    let basket = getBasket();
-    let foundProduct = basket.find(
+    let basketLS = [...basket];
+    let foundProduct = basketLS.find(
       (p) =>
-        p.clothe == product.clothe &&
-        p.color == product.color &&
-        p.size == product.size
+        p.clothe === product.clothe &&
+        p.color === product.color &&
+        p.size === product.size
     );
-
-    if (foundProduct != undefined) {
-      foundProduct.quantity += quantity;
-      if (foundProduct.quantity <= 0) {
-        openAlert();
+    if (foundProduct !== undefined) {
+      if (foundProduct.quantity + quantity <= 0) {
+        openAlert(foundProduct.clothe + foundProduct.size + foundProduct.color);
       } else {
-        saveBasket(basket);
-        window.location.reload();
+        foundProduct.quantity += quantity;
+
+        saveBasket(basketLS);
+        setBasket(basketLS);
+        setTotalItems((prev) => prev + quantity);
       }
     }
   }
 
   function getTotalPrice() {
-    let basket = getBasket();
     let total = 0;
     for (let product of basket) {
       total += product.quantity * product.price;
@@ -87,14 +100,18 @@ const ShoppingCart = () => {
     return total.toFixed(2);
   }
 
-  let basket = getBasket();
+  // let basketLS = getBasket();
   // <--------------- fonctions local storage
 
-  const close = () => document.getElementById("close").classList.add("closed");
-
-  function openAlert() {
-    document.getElementById("close").classList.remove("closed");
+  function openAlert(id) {
+    document.getElementById(id).classList.remove("closed");
   }
+
+  function close(id) {
+    document.getElementById(id).classList.add("closed");
+  }
+
+  // console.log("basket STATE", basket);
 
   return (
     <div>
@@ -112,25 +129,17 @@ const ShoppingCart = () => {
       )}
       {clothes &&
         basket.length &&
-        basket.map((item) => (
-          <div className="allClothesPurchased">
-            <div className="alertShop closed" id="close" onClick={close}>
-              <span className="closebtn">&times;</span>
-              Etes-vous sûr de vouloir supprimer cet article de votre panier ?
-              <div className="checkChoice">
-                <p className="confirm" onClick={() => removeFromBasket(item)}>
-                  oui
-                </p>
-                <p className="abort" onClick={close}>
-                  non, je veux le conserver
-                </p>
-              </div>
-            </div>
+        basket.map((item, index, arr) => (
+          <div
+            className="allClothesPurchased"
+            key={item.clothe + item.size + item.color}
+          >
             <div className="eachClothesPurchased">
               <p
                 className="clotheName"
+                id={item.clothe}
                 onClick={() => {
-                  openModal();
+                  openModal(item.clothe);
                 }}
               >
                 {clothes
@@ -141,18 +150,19 @@ const ShoppingCart = () => {
                 .filter((clothe) => clothe.id === item.clothe)
                 .map((clothe) => (
                   <img
+                    key={clothe.id}
                     src={require(`../assets/clothes/${clothe.image}`)}
                     alt={clothe.name}
                     className="clotheImage"
                     onClick={() => {
-                      openModal();
+                      openModal(clothe.id);
                     }}
                   />
                 ))}
               <p
                 className="clotheSize"
                 onClick={() => {
-                  openModal();
+                  openModal(item.clothe);
                 }}
               >
                 {sizes
@@ -163,11 +173,12 @@ const ShoppingCart = () => {
                 .filter((color) => color.id === item.color)
                 .map((color) => (
                   <img
+                    key={color.id}
                     src={require(`../assets/colors/${color.image}`)}
                     alt={color.color}
                     className="clotheColor"
                     onClick={() => {
-                      openModal();
+                      openModal(item.clothe);
                     }}
                   />
                 ))}
@@ -176,9 +187,13 @@ const ShoppingCart = () => {
               </div>
               <div className="clotheQuantity">
                 <p>{item.quantity}</p>
+                {/* {console.log(basket)} */}
                 <p
                   className="quantityChg plus"
-                  onClick={() => changeQuantity(item, +1)}
+                  onClick={() =>
+                    console.log("onclick", item, basket) ||
+                    changeQuantity(item, +1)
+                  }
                 >
                   +
                 </p>
@@ -190,17 +205,39 @@ const ShoppingCart = () => {
                 </p>
               </div>
 
-              <FaTrash className="trash" onClick={() => openAlert()} />
+              <FaTrash
+                className="trash"
+                onClick={() => openAlert(item.clothe + item.size + item.color)}
+              />
               <p className="clotheTotalPrice">
                 {(item.quantity * item.price).toFixed(2)}
               </p>
+            </div>
+            <div
+              className="alertShop closed"
+              id={item.clothe + item.size + item.color}
+              onClick={() => close(item.clothe + item.size + item.color)}
+            >
+              <span className="closebtn">&times;</span>
+              Etes-vous sûr de vouloir supprimer cet article de votre panier ?
+              <div className="checkChoice">
+                <p className="confirm" onClick={() => removeFromBasket(item)}>
+                  oui
+                </p>
+                <p
+                  className="abort"
+                  onClick={() => close(item.clothe + item.size + item.color)}
+                >
+                  non, je veux le conserver
+                </p>
+              </div>
             </div>
 
             {showModal && (
               <Modal
                 showModal={showModal}
                 setShowModal={setShowModal}
-                id={item.clothe}
+                id={modalId}
                 className="ShoppingCartWhenModal"
               />
             )}
