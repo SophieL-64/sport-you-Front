@@ -4,7 +4,8 @@ import Clothes from "../components/Clothes";
 import Searchbar from "../components/Searchbar";
 import "./Home.css";
 
-const Home = () => {
+const Home = (props) => {
+  const { totalItems, setTotalItems, getNumberProduct } = props;
   const [clothes, setClothes] = useState([]);
   const [searchInput, setSearchInput] = useState("");
   const [clothesSearched, setClothesSearched] = useState([]);
@@ -26,7 +27,12 @@ const Home = () => {
           searchInput={searchInput}
           setSearchInput={setSearchInput}
         />
-        <Clothes clothes={clothesSearched} />
+        <Clothes
+          clothes={clothesSearched}
+          totalItems={totalItems}
+          setTotalItems={setTotalItems}
+          getNumberProduct={getNumberProduct}
+        />
       </>
     )
   );

@@ -17,6 +17,7 @@
   box-shadow: 0 5px 16px var(--shadow-color);
   position: relative;
   padding: 30px;
+  border-radius: 20px;
 }
 
 .eachClothe:hover {

@@ -5,7 +5,8 @@ import Logo from "./Logo";
 import "./Navbar.css";
 import { FaShoppingBasket } from "react-icons/fa";
 
-const Navbar = () => {
+const Navbar = (props) => {
+  const { totalItems, getNumberProduct } = props;
   const [sections, setSections] = useState();
 
   useEffect(() => {
@@ -14,23 +15,9 @@ const Navbar = () => {
       .then((res) => setSections(res.data));
   }, []);
 
-  function getBasket() {
-    let basket = localStorage.getItem("basket");
-    if (basket == null) {
-      return [];
-    } else {
-      return JSON.parse(basket);
-    }
-  }
-
-  function getNumberProduct() {
-    let basket = getBasket();
-    let number = 0;
-    for (let product of basket) {
-      number += product.quantity;
-    }
-    return number;
-  }
+  useEffect(() => {
+    getNumberProduct();
+  });
 
   return (
     <nav className="navbar">
@@ -41,7 +28,11 @@ const Navbar = () => {
         </a>
         {sections &&
           sections.map((section) => (
-            <a href={`/section/${section.id}`} className="navLink">
+            <a
+              href={`/section/${section.id}`}
+              className="navLink"
+              key={section.id}
+            >
               <li className="navItem">
                 {section.name.charAt(0).toUpperCase() + section.name.slice(1)}
               </li>
@@ -50,7 +41,9 @@ const Navbar = () => {
         <a href="/shopping-cart" className="navLink">
           <li className="navItem basketCart">
             <FaShoppingBasket className="basket" id="shopNow" />
-            <p className="itemsCount">{getNumberProduct()}</p>
+            <p className={totalItems === 0 ? "inactif" : "itemsCount"}>
+              {totalItems}
+            </p>
           </li>
         </a>
       </ul>

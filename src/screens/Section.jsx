@@ -5,7 +5,8 @@ import axios from "axios";
 import "./Section.css";
 import Searchbar from "../components/Searchbar";
 
-const Section = () => {
+const Section = (props) => {
+  const { totalItems, setTotalItems, getNumberProduct } = props;
   let params = useParams();
   let { id } = params;
 
@@ -29,7 +30,12 @@ const Section = () => {
         searchInput={searchInput}
         setSearchInput={setSearchInput}
       />
-      <Clothes clothes={clothesSearched} />
+      <Clothes
+        clothes={clothesSearched}
+        totalItems={totalItems}
+        setTotalItems={setTotalItems}
+        getNumberProduct={getNumberProduct}
+      />
     </>
   );
 };
