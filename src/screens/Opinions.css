@@ -1,0 +1,24 @@
+.opinionsTitle {
+  color: var(--main-bg-color);
+  padding: 2rem;
+  text-align: center;
+}
+
+.opinionsPage {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 10px;
+  justify-items: center;
+}
+
+.opinionName {
+  color: white;
+}
+
+.eachOpinion {
+  border: 1px white solid;
+  border-radius: 20px;
+  background-color: var(--second-bg-color);
+  width: 30vw;
+  padding: 1rem;
+}

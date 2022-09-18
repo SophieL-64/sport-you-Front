@@ -5,8 +5,10 @@ import "./Footer.css";
 import { FiFacebook, FiInstagram, FiTwitter, FiYoutube } from "react-icons/fi";
 import { FaSnapchatGhost, FaPinterest } from "react-icons/fa";
 
-const Footer = () => {
+const Footer = (props) => {
+  const { opinions } = props;
   const [sections, setSections] = useState();
+  const [averageRate, setAverageRate] = useState(0);
 
   useEffect(() => {
     axios
@@ -14,8 +16,26 @@ const Footer = () => {
       .then((res) => setSections(res.data));
   }, []);
 
+  useEffect(() => {
+    let sumOfRates = opinions
+      ?.map((opinion) => opinion.rate)
+      ?.reduce(
+        (previousValue, currentValue) => previousValue + currentValue,
+        0
+      );
+    let nbOfRates = opinions
+      ?.map((opinion) => 1)
+      ?.reduce(
+        (previousValue, currentValue) => previousValue + currentValue,
+        0
+      );
+    console.log("sumOfRates", sumOfRates, "nbOfRates", nbOfRates);
+    setAverageRate((sumOfRates / nbOfRates).toFixed(1));
+  }, [opinions]);
+
   return (
     <div className="footer">
+      {console.log("opinions", opinions)}
       <div className="footer-section">
         <h2 className="footer-title">CONTACT</h2>
         <p className="footer-text">
@@ -33,7 +53,13 @@ const Footer = () => {
           </strong>
         </p>
         <p className="footer-text">Nous rejoindre !</p>
-        <p className="footer-text">Questions fréquentes</p>
+        <p className="footer-text">
+          <strong>
+            <Link to={`/faq`} className="footer-links">
+              Foire Aux Questions
+            </Link>
+          </strong>
+        </p>
       </div>
       <div className="footer-section">
         <h2 className="footer-title">RAYONS</h2>
@@ -90,8 +116,13 @@ const Footer = () => {
         </div>
         <div>
           <p>
-            Sport & You a reçu la note de 9,5/10 de ses clients. Votre
-            satisfaction est notre priorité.
+            Sport & You a reçu la note de <strong>{averageRate}/5</strong> de
+            ses clients. Votre satisfaction est notre priorité.
+          </p>
+          <p>
+            <Link to={`/opinions`} className="footer-links">
+              <strong>Consulter les avis</strong>
+            </Link>
           </p>
         </div>
       </div>

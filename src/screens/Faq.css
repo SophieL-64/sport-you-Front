@@ -1,0 +1,22 @@
+.allFaq {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.titleFaq {
+  color: var(--main-bg-color);
+  padding: 2rem;
+}
+
+.eachFaq {
+  padding: 1rem;
+}
+
+.eachQuestion {
+  background-color: var(--second-bg-color);
+  padding: 1rem;
+  border-radius: 20px;
+  font-weight: bold;
+}
