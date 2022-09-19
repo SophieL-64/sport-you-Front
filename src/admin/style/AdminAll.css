@@ -1,0 +1,46 @@
+.adminPage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.adminPage thead {
+  background-color: var(--main-bg-color);
+  color: white;
+}
+
+.adminColumn {
+  text-align: center;
+  font-weight: bold;
+}
+
+.adminTable {
+  padding: 1rem;
+  border-collapse: collapse;
+}
+
+td {
+  border: 1px solid black;
+  padding: 0.5rem;
+  text-align: center;
+}
+
+.adminAddButton {
+  margin: 2rem auto;
+  width: 30rem;
+  background-color: var(--main-bg-color);
+  border-radius: 5px;
+  color: white;
+  padding: 15px;
+  border: none;
+  box-shadow: 5px 5px 5px grey;
+  cursor: pointer;
+}
+
+.adminAddButton:active {
+  transform: translate(1px, 2px);
+}
+
+.actionIcon {
+  cursor: pointer;
+}

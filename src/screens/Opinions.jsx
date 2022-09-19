@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
 // import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import "./Opinions.css";
 
-const Opinions = () => {
+const Opinions = (props) => {
+  const { totalItems, setTotalItems, getNumberProduct } = props;
   const [opinions, setOpinions] = useState(null);
 
   useEffect(() => {
@@ -22,11 +25,16 @@ const Opinions = () => {
 
   return (
     <>
+      <Navbar
+        totalItems={totalItems}
+        setTotalItems={setTotalItems}
+        getNumberProduct={getNumberProduct}
+      />
       <h1 className="opinionsTitle">Notre sélection d'avis</h1>
       <div className="opinionsPage">
         {opinions &&
           opinions.map((opinion) => (
-            <div className="eachOpinion">
+            <div className="eachOpinion" key={opinion.id}>
               <h2 className="opinionName">{opinion.firstname}</h2>
               <h2 className="opinionRate">{rating(opinion.rate)}</h2>
               {console.log("opinion.rate", opinion.rate)}
@@ -34,6 +42,7 @@ const Opinions = () => {
             </div>
           ))}
       </div>
+      <Footer opinions={opinions} />
     </>
   );
 };

@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Clothes from "../components/Clothes";
 import axios from "axios";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import "./Section.css";
 import Searchbar from "../components/Searchbar";
 
 const Section = (props) => {
-  const { totalItems, setTotalItems, getNumberProduct } = props;
+  const { totalItems, setTotalItems, getNumberProduct, opinions } = props;
   let params = useParams();
   let { id } = params;
 
@@ -23,6 +25,11 @@ const Section = (props) => {
 
   return (
     <>
+      <Navbar
+        totalItems={totalItems}
+        setTotalItems={setTotalItems}
+        getNumberProduct={getNumberProduct}
+      />
       <Searchbar
         clothes={clothes}
         clothesSearched={clothesSearched}
@@ -36,6 +43,7 @@ const Section = (props) => {
         setTotalItems={setTotalItems}
         getNumberProduct={getNumberProduct}
       />
+      <Footer opinions={opinions} />
     </>
   );
 };

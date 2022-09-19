@@ -1,0 +1,10 @@
+.adminTitle {
+  background-color: var(--main-bg-color);
+  color: white;
+  padding: 3rem;
+  text-align: center;
+}
+
+.char {
+  font-size: 0.7rem;
+}
