@@ -1,3 +1,51 @@
+#sport-you-Front
+
+# ABOUT THE PROJECT
+
+This is an e-commerce website, specialized in sport goods.
+
+Later, this application will allows you as admin to manage the goods which appear on the website.
+You will be able to view/add/edit/delete goods.
+You also will have access to your customers feedbacks (opinions, complaints, questions).
+
+Make your website evolve in real time and autonomously as you have your products turn over.
+Have a real customer listening policy thanks to their precious feedbacks.
+
+## Demo 👀 :
+
+Lien : coming soon
+
+## Built With:
+
+- React.js
+- Axios
+<!-- - Material-UI : https://mui.com/
+- Framer-motion : https://www.framer.com/motion/
+- Jwt : https://jwt.io/
+- Leaflet : https://leafletjs.com/
+- Sass : https://sass-lang.com/
+- Google analytics 4 : https://support.google.com/analytics/answer/10089681 -->
+
+## Getting Started 🚀 :
+
+:one: Install the backend 🔗 -> https://github.com/SophieL-64/sport-you-Back
+
+:two: Clone the repo
+
+      git clone https://github.com/SophieL-64/sport-you-Front.git
+
+:three: Install NPM packages
+
+      npm install
+
+:four: Lancement
+
+      npm start
+
+Enjoy !
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

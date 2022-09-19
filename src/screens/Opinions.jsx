@@ -22,7 +22,7 @@ const Opinions = () => {
 
   return (
     <>
-      <h1 className="opinionsTitle">Vos avis nous intéressent</h1>
+      <h1 className="opinionsTitle">Notre sélection d'avis</h1>
       <div className="opinionsPage">
         {opinions &&
           opinions.map((opinion) => (
