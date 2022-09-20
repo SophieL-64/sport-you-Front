@@ -32,7 +32,7 @@ const Clothes = (props) => {
             }}
           >
             <img
-              src={require(`../assets/clothes/${clothe.image}`)}
+              src={`http://localhost:5000/images/clothes/${clothe.image}`}
               alt={clothe.name}
               className="clotheImage"
             />
@@ -40,7 +40,7 @@ const Clothes = (props) => {
             <p className="clothePrice">{clothe.price}</p>
             <div className="clotheBrandLogo">
               <img
-                src={require(`../assets/brands/${clothe.logo}`)}
+                src={`http://localhost:5000/images/brands/${clothe.logo}`}
                 alt={clothe.brand}
                 className="clotheLogo"
               />

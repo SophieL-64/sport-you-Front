@@ -1,14 +1,20 @@
-// import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 // import { useNavigate } from "react-router-dom";
-// import axios from "axios";
+import axios from "axios";
 import { Link } from "react-router-dom";
 import { MdEdit } from "react-icons/md";
 import { BsFillTrashFill } from "react-icons/bs";
 import "../style/AdminAll.css";
 
 const ClothesAll = (props) => {
-  const { clothes } = props;
+  const { clothes, refresh, setRefresh } = props;
   console.log("clothes in ClothesAll", clothes);
+
+  function deleteClothe(id) {
+    axios
+      .delete(`http://localhost:5000/clothes/${id}`)
+      .then(() => setRefresh(!refresh));
+  }
 
   return (
     <div className="adminPage">
@@ -40,8 +46,17 @@ const ClothesAll = (props) => {
                 <td>{clothe.section}</td>
                 <td>{clothe.target}</td>
                 <td>
-                  <MdEdit className="actionIcon" />{" "}
-                  <BsFillTrashFill className="actionIcon" />
+                  <Link to={`/admin/clothesEdit/${clothe.id}`}>
+                    <MdEdit className="actionIcon" />
+                  </Link>
+                  <BsFillTrashFill
+                    className="actionIcon"
+                    onClick={() => {
+                      window.confirm(
+                        `Êtes-vous sûr de vouloir supprimer cet article : ${clothe.name} ?`
+                      ) && deleteClothe(clothe.id);
+                    }}
+                  />
                 </td>
               </tr>
             ))}

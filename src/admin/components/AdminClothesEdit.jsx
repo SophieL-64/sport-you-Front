@@ -4,10 +4,15 @@ import axios from "axios";
 import SectionsOptions from "./SectionsOptions";
 import BrandsOptions from "./BrandsOptions";
 import TargetsOptions from "./TargetsOptions";
+import { useParams } from "react-router-dom";
 
 import "../style/AdminAddEdit.css";
 
-const AdminClothesAdd = () => {
+const AdminClothesEdit = () => {
+  let params = useParams();
+  let { id } = params;
+
+  const [defaultValue, setDefaultValue] = useState(null);
   const [clotheName, setClotheName] = useState("");
   const [clotheDescription, setClotheDescription] = useState("");
   const [clotheImage, setClotheImage] = useState({
@@ -32,6 +37,40 @@ const AdminClothesAdd = () => {
   const [sizes, setSizes] = useState([]);
   // for colors mapping
   const [colors, setColors] = useState([]);
+
+  //charge données pré-existantes : table clothes //
+  useEffect(() => {
+    axios.get(`http://localhost:5000/clothes/edit/${id}`).then((res) => {
+      setDefaultValue(res.data[0]);
+      setClotheName(res.data[0].name);
+      setClotheDescription(res.data[0].description);
+      setClothePrice(res.data[0].price);
+      setClotheSectionId(res.data[0].sections_id);
+      setClotheBrandId(res.data[0].brands_id);
+      setClotheTargetId(res.data[0].targets_id);
+    });
+  }, []);
+
+  const editImg = (event) => {
+    setClotheImage({
+      ...clotheImage,
+      file: event.target.files[0],
+      filepreview: URL.createObjectURL(event.target.files[0]),
+    });
+  };
+  //charge données pré-existantes : table de jointure sizes //
+  useEffect(() => {
+    axios.get(`http://localhost:5000/sizes/clotheEdit/${id}`).then((res) => {
+      setClotheSizesId(res.data);
+    });
+  }, []);
+
+  //charge données pré-existantes : table de jointure colors//
+  useEffect(() => {
+    axios.get(`http://localhost:5000/colors/clotheEdit/${id}`).then((res) => {
+      setClotheColorsId(res.data);
+    });
+  }, []);
 
   // pour le mapping des brands dans menu déroulant
   useEffect(() => {
@@ -63,60 +102,61 @@ const AdminClothesAdd = () => {
       .then((res) => setColors(res.data));
   }, []);
 
-  const editImg = (event) => {
-    setClotheImage({
-      ...clotheImage,
-      file: event.target.files[0],
-      filepreview: URL.createObjectURL(event.target.files[0]),
-    });
-  };
-  console.log(
-    "clotheName",
-    clotheName,
-    "clotheDescription",
-    clotheDescription,
-    "clotheImage.file",
-    clotheImage.file,
-    "clothePrice",
-    clothePrice,
-    "clotheSectionId",
-    clotheSectionId,
-    "clotheBrandId",
-    clotheBrandId,
-    "clotheTargetId",
-    clotheTargetId,
-    "clotheSizesId",
-    clotheSizesId,
-    "clotheColorsId",
-    clotheColorsId
-  );
+  // console.log(
+  //   "clotheName",
+  //   clotheName,
+  //   "clotheDescription",
+  //   clotheDescription,
+  //   "clotheImage.file",
+  //   clotheImage.file,
+  //   "clothePrice",
+  //   clothePrice,
+  //   "clotheSectionId",
+  //   clotheSectionId,
+  //   "clotheBrandId",
+  //   clotheBrandId,
+  //   "clotheTargetId",
+  //   clotheTargetId,
+  //   "clotheSizesId",
+  //   clotheSizesId,
+  //   "clotheColorsId",
+  //   clotheColorsId
+  // );
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const formdata = new FormData();
-    formdata.append("name", clotheName);
-    formdata.append("description", clotheDescription);
-    formdata.append("image", clotheImage.file);
-    formdata.append("price", clothePrice);
-    formdata.append("sections_id", clotheSectionId);
-    formdata.append("brands_id", clotheBrandId);
-    formdata.append("targets_id", clotheTargetId);
-    formdata.append("sizesAvailables", clotheSizesId);
-    formdata.append("colorsAvailables", clotheColorsId);
+    clotheName !== defaultValue.name && formdata.append("name", clotheName);
+    clotheDescription !== defaultValue.description &&
+      formdata.append("description", clotheDescription);
+    clotheImage.filepreview !== defaultValue.image &&
+      formdata.append("image", clotheImage.file);
+
+    clothePrice !== defaultValue.price && formdata.append("price", clothePrice);
+    clotheSectionId !== defaultValue.sections_id &&
+      formdata.append("sections_id", clotheSectionId);
+    clotheBrandId !== defaultValue.brands_id &&
+      formdata.append("brands_id", clotheBrandId);
+    clotheTargetId !== defaultValue.targets_id &&
+      formdata.append("targets_id", clotheTargetId);
+    clotheSizesId !== defaultValue.sizesAvailables &&
+      formdata.append("sizesAvailables", clotheSizesId);
+    clotheColorsId !== defaultValue.colorsAvailables &&
+      formdata.append("colorsAvailables", clotheColorsId);
     axios
-      .post(`http://localhost:5000/clothes/add`, formdata, {
+      .put(`http://localhost:5000/clothes/edit/${id}`, formdata, {
         headers: { "Content-Type": "multipart/form-data" },
       })
       .then((res) => {
         console.warn(res);
         if (res.data.success === 1) {
           setIsSuccess({
-            message: "Ajout de l'article validé",
+            message: "Modification de l'article validée",
             uploadOk: res.data.success,
           });
         } else {
           setIsSuccess({
-            message: "Ajout de l'article refusé",
+            message: "Modification de l'article refusée",
             uploadOk: res.data.success,
           });
         }
@@ -159,7 +199,8 @@ const AdminClothesAdd = () => {
 
   return (
     <div>
-      <h1 className="adminTitle">Ajout d'un article</h1>
+      <h1 className="adminTitle">Modification de l'article</h1>
+      <h2 className="adminTitle">{clotheName}</h2>
       <form className="adminForm" action="submit" onSubmit={handleSubmit}>
         <div className="adminChamp">
           <label className="adminLabel" htmlFor="adminName">
@@ -171,10 +212,9 @@ const AdminClothesAdd = () => {
               type="text"
               id="adminName"
               name="adminName"
-              placeholder="nom de l'article"
+              value={clotheName}
               maxLength="100"
               onChange={(e) => setClotheName(e.target.value)}
-              required
             />
             <p className="char">
               {clotheName && 100 - clotheName.length} caractères restants
@@ -191,10 +231,9 @@ const AdminClothesAdd = () => {
               type="text"
               id="adminDescr"
               name="adminDescr"
-              placeholder="description"
+              value={clotheDescription}
               maxLength="300"
               onChange={(e) => setClotheDescription(e.target.value)}
-              required
             />
             <p className="char">
               {clotheDescription && 300 - clotheDescription.length} caractères
@@ -211,12 +250,15 @@ const AdminClothesAdd = () => {
             type="file"
             name="clotheImg"
             onChange={editImg}
-            required
           />
           {clotheImage.filepreview !== null ? (
             <img
               className="adminImgApercu"
-              src={clotheImage.filepreview}
+              src={
+                clotheImage.filepreview !== defaultValue.image
+                  ? clotheImage.filepreview
+                  : `http://localhost:5000/images/clothes/${clotheImage.filepreview}`
+              }
               alt="UploadImage"
             />
           ) : null}
@@ -230,9 +272,8 @@ const AdminClothesAdd = () => {
             type="number"
             id="adminPrice"
             name="adminPrice"
-            placeholder="prix de l'article"
+            value={clothePrice}
             onChange={(e) => setClothePrice(e.target.value)}
-            required
           />
         </div>
         <div className="adminChamp">
@@ -242,6 +283,7 @@ const AdminClothesAdd = () => {
           <select
             required
             className="adminSelect"
+            value={clotheSectionId}
             onChange={(e) => setClotheSectionId(e.target.value)}
             id="adminSectionChoice"
             name="adminSectionChoice"
@@ -265,6 +307,7 @@ const AdminClothesAdd = () => {
           <select
             required
             className="adminSelect"
+            value={clotheBrandId}
             onChange={(e) => setClotheBrandId(e.target.value)}
             id="adminBrandChoice"
             name="adminBrandChoice"
@@ -288,6 +331,7 @@ const AdminClothesAdd = () => {
           <select
             required
             className="adminSelect"
+            value={clotheTargetId}
             onChange={(e) => setClotheTargetId(e.target.value)}
           >
             <option className="adminOption" value="">
@@ -318,7 +362,7 @@ const AdminClothesAdd = () => {
             ))}
           </div>
         </div>
-        <div className="adminChamp2">
+        {/* <div className="adminChamp2">
           <p className="adminLabel">Coloris disponibles</p>
           <div className="adminCheckbox">
             {colors.map((color) => (
@@ -333,7 +377,7 @@ const AdminClothesAdd = () => {
               </label>
             ))}
           </div>
-        </div>
+        </div> */}
 
         <div>
           {isSuccess !== null ? (
@@ -341,11 +385,11 @@ const AdminClothesAdd = () => {
           ) : null}
         </div>
         <button className="formButton" type="submit">
-          Ajouter
+          Modifier
         </button>
       </form>
     </div>
   );
 };
 
-export default AdminClothesAdd;
+export default AdminClothesEdit;

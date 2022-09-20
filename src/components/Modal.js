@@ -336,7 +336,7 @@ export const Modal = (props) => {
         <Background ref={modalRef} onClick={closeModal}>
           <ModalWrapper showModal={showModal}>
             <ModalImg
-              src={require(`../assets/clothes/${clothe.image}`)}
+              src={`http://localhost:5000/images/clothes/${clothe.image}`}
               alt={clothe.name}
             />
             <ModalContent>
@@ -344,7 +344,7 @@ export const Modal = (props) => {
               <p className="clotheDescrModal">{clothe.description}</p>
               <p className="clothePriceModal">{clothe.price}</p>
               <img
-                src={require(`../assets/brands/${clothe.logo}`)}
+                src={`http://localhost:5000/images/brands/${clothe.logo}`}
                 alt={clothe.brand}
                 className="clotheLogoModal"
               />
@@ -353,7 +353,7 @@ export const Modal = (props) => {
                 {colors &&
                   colors.map((color, key) => (
                     <img
-                      src={require(`../assets/colors/${color.colorImage}`)}
+                      src={`http://localhost:5000/images/colors/${color.colorImage}`}
                       alt={color.color}
                       key={color.id}
                       id="color"

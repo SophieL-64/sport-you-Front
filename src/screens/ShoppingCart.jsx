@@ -160,7 +160,7 @@ const ShoppingCart = (props) => {
                   .map((clothe) => (
                     <img
                       key={clothe.id}
-                      src={require(`../assets/clothes/${clothe.image}`)}
+                      src={`http://localhost:5000/images/clothes/${clothe.image}`}
                       alt={clothe.name}
                       className="clotheImage"
                       onClick={() => {
@@ -183,7 +183,7 @@ const ShoppingCart = (props) => {
                   .map((color) => (
                     <img
                       key={color.id}
-                      src={require(`../assets/colors/${color.image}`)}
+                      src={`http://localhost:5000/images/colors/${color.image}`}
                       alt={color.color}
                       className="clotheColor"
                       onClick={() => {

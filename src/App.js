@@ -12,6 +12,7 @@ import AdminDashboard from "./admin/screens/AdminDashboard";
 import AdminClothes from "./admin/screens/AdminClothes";
 import AdminClothesAll from "./admin/components/AdminClothesAll";
 import AdminClothesAdd from "./admin/components/AdminClothesAdd";
+import AdminClothesEdit from "./admin/components/AdminClothesEdit";
 import AdminFeedbacks from "./admin/screens/AdminFeedbacks";
 import "./App.css";
 
@@ -117,6 +118,7 @@ function App() {
           <Route path="/admin/clothes" element={<AdminClothes />} />
           <Route path="/admin/clothesAll" element={<AdminClothesAll />} />
           <Route path="/admin/clothesAdd" element={<AdminClothesAdd />} />
+          <Route path="/admin/clothesEdit/:id" element={<AdminClothesEdit />} />
           <Route path="/admin/feedbacks" element={<AdminFeedbacks />} />
         </Routes>
       </div>
