@@ -1,0 +1,52 @@
+.adminTitle {
+  background-color: var(--main-bg-color);
+  color: white;
+  padding: 3rem;
+  text-align: center;
+}
+
+.admin {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3rem;
+}
+
+.adminInfo {
+  display: flex;
+}
+
+.adminInfo input,
+.adminInfo label {
+  width: 10rem;
+}
+
+.adminButton {
+  background-color: var(--main-bg-color);
+  border-radius: 5px;
+  color: white;
+  padding: 15px;
+  border: none;
+  box-shadow: 5px 5px 5px grey;
+  cursor: pointer;
+}
+
+.adminButton:active {
+  transform: translate(1px, 2px);
+}
+
+.adminEntry {
+  width: 30rem;
+  background-color: var(--main-bg-color);
+  border-radius: 5px;
+  color: white;
+  padding: 15px;
+  border: none;
+  box-shadow: 5px 5px 5px grey;
+  cursor: pointer;
+}
+
+.adminEntry:active {
+  transform: translate(1px, 2px);
+}

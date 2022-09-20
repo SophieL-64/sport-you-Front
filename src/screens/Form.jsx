@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import "./Form.css";
 
-const Form = () => {
+const Form = (props) => {
+  const { totalItems, setTotalItems, getNumberProduct, opinions } = props;
   // pour le mapping des types de feed-backs, dans le menu déroulant
   const [inputsTypes, setInputsTypes] = useState([]);
   const [firstName, setFirstName] = useState("");
@@ -104,6 +107,11 @@ const Form = () => {
 
   return (
     <>
+      <Navbar
+        totalItems={totalItems}
+        setTotalItems={setTotalItems}
+        getNumberProduct={getNumberProduct}
+      />
       <h1 className="formTitle">Nous sommes à votre écoute</h1>
       <div className="formPage">
         <form className="form" action="submit" onSubmit={handleFormSubmit}>
@@ -239,6 +247,7 @@ const Form = () => {
           </button>
         </form>
       </div>
+      <Footer opinions={opinions} />
     </>
   );
 };

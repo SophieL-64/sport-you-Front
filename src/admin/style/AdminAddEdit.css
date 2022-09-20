@@ -1,0 +1,50 @@
+.adminTitle {
+  background-color: var(--main-bg-color);
+  color: white;
+  padding: 1rem;
+  text-align: center;
+}
+
+.adminChamp {
+  display: flex;
+}
+
+.char {
+  font-size: 0.7rem;
+}
+
+.adminForm {
+  margin: 3rem auto;
+}
+
+.adminLabel {
+  width: 15rem;
+  font-weight: bold;
+  text-align: right;
+  padding-right: 1rem;
+}
+
+.adminInput {
+  width: 25rem;
+  height: 2rem;
+}
+
+.adminSelect {
+  width: 25rem;
+  height: 2rem;
+}
+
+.adminTextArea {
+  width: 25rem;
+  height: 15rem;
+}
+
+.adminChamp2 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.adminBox {
+  padding: 0.5rem;
+}

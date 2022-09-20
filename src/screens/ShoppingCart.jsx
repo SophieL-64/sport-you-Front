@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { Modal } from "../components/Modal";
 import axios from "axios";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import "./ShoppingCart.css";
 import { FaTrash } from "react-icons/fa";
 
 const ShoppingCart = (props) => {
-  const { setTotalItems } = props;
+  const { totalItems, setTotalItems, getNumberProduct, opinions } = props;
 
   const [clothes, setClothes] = useState(null);
   const [colors, setColors] = useState([]);
@@ -114,147 +116,158 @@ const ShoppingCart = (props) => {
   // console.log("basket STATE", basket);
 
   return (
-    <div>
-      {clothes && basket.length && (
-        <div className="shoppingTitles">
-          <p>Désignation articles</p>
-          <p>Aperçu</p>
-          <p>Taille</p>
-          <p>Coloris</p>
-          <p>Prix unitaire</p>
-          <p>Quantité</p>
-          <p></p>
-          <p>Prix total</p>
-        </div>
-      )}
-      {clothes &&
-        basket.length &&
-        basket.map((item, index, arr) => (
-          <div
-            className="allClothesPurchased"
-            key={item.clothe + item.size + item.color}
-          >
-            <div className="eachClothesPurchased">
-              <p
-                className="clotheName"
-                id={item.clothe}
-                onClick={() => {
-                  openModal(item.clothe);
-                }}
-              >
+    <>
+      <Navbar
+        totalItems={totalItems}
+        setTotalItems={setTotalItems}
+        getNumberProduct={getNumberProduct}
+      />
+
+      <div>
+        {clothes && basket.length && (
+          <div className="shoppingTitles">
+            <p>Désignation articles</p>
+            <p>Aperçu</p>
+            <p>Taille</p>
+            <p>Coloris</p>
+            <p>Prix unitaire</p>
+            <p>Quantité</p>
+            <p></p>
+            <p>Prix total</p>
+          </div>
+        )}
+        {clothes &&
+          basket.length &&
+          basket.map((item, index, arr) => (
+            <div
+              className="allClothesPurchased"
+              key={item.clothe + item.size + item.color}
+            >
+              <div className="eachClothesPurchased">
+                <p
+                  className="clotheName"
+                  id={item.clothe}
+                  onClick={() => {
+                    openModal(item.clothe);
+                  }}
+                >
+                  {clothes
+                    .filter((clothe) => clothe.id === item.clothe)
+                    .map((clothe) => clothe.name)}
+                </p>
                 {clothes
                   .filter((clothe) => clothe.id === item.clothe)
-                  .map((clothe) => clothe.name)}
-              </p>
-              {clothes
-                .filter((clothe) => clothe.id === item.clothe)
-                .map((clothe) => (
-                  <img
-                    key={clothe.id}
-                    src={require(`../assets/clothes/${clothe.image}`)}
-                    alt={clothe.name}
-                    className="clotheImage"
-                    onClick={() => {
-                      openModal(clothe.id);
-                    }}
-                  />
-                ))}
-              <p
-                className="clotheSize"
-                onClick={() => {
-                  openModal(item.clothe);
-                }}
-              >
-                {sizes
-                  .filter((size) => size.id === item.size)
-                  .map((size) => size.size)}
-              </p>
-              {colors
-                .filter((color) => color.id === item.color)
-                .map((color) => (
-                  <img
-                    key={color.id}
-                    src={require(`../assets/colors/${color.image}`)}
-                    alt={color.color}
-                    className="clotheColor"
-                    onClick={() => {
-                      openModal(item.clothe);
-                    }}
-                  />
-                ))}
-              <div className="clothePriceUnit">
-                <p>{item.price}</p>
-              </div>
-              <div className="clotheQuantity">
-                <p>{item.quantity}</p>
-                {/* {console.log(basket)} */}
+                  .map((clothe) => (
+                    <img
+                      key={clothe.id}
+                      src={`http://localhost:5000/images/clothes/${clothe.image}`}
+                      alt={clothe.name}
+                      className="clotheImage"
+                      onClick={() => {
+                        openModal(clothe.id);
+                      }}
+                    />
+                  ))}
                 <p
-                  className="quantityChg plus"
+                  className="clotheSize"
+                  onClick={() => {
+                    openModal(item.clothe);
+                  }}
+                >
+                  {sizes
+                    .filter((size) => size.id === item.size)
+                    .map((size) => size.size)}
+                </p>
+                {colors
+                  .filter((color) => color.id === item.color)
+                  .map((color) => (
+                    <img
+                      key={color.id}
+                      src={`http://localhost:5000/images/colors/${color.image}`}
+                      alt={color.color}
+                      className="clotheColor"
+                      onClick={() => {
+                        openModal(item.clothe);
+                      }}
+                    />
+                  ))}
+                <div className="clothePriceUnit">
+                  <p>{item.price}</p>
+                </div>
+                <div className="clotheQuantity">
+                  <p>{item.quantity}</p>
+                  {/* {console.log(basket)} */}
+                  <p
+                    className="quantityChg plus"
+                    onClick={() =>
+                      console.log("onclick", item, basket) ||
+                      changeQuantity(item, +1)
+                    }
+                  >
+                    +
+                  </p>
+                  <p
+                    className="quantityChg moins"
+                    onClick={() => changeQuantity(item, -1)}
+                  >
+                    -
+                  </p>
+                </div>
+
+                <FaTrash
+                  className="trash"
                   onClick={() =>
-                    console.log("onclick", item, basket) ||
-                    changeQuantity(item, +1)
+                    openAlert(item.clothe + item.size + item.color)
                   }
-                >
-                  +
-                </p>
-                <p
-                  className="quantityChg moins"
-                  onClick={() => changeQuantity(item, -1)}
-                >
-                  -
+                />
+                <p className="clotheTotalPrice">
+                  {(item.quantity * item.price).toFixed(2)}
                 </p>
               </div>
-
-              <FaTrash
-                className="trash"
-                onClick={() => openAlert(item.clothe + item.size + item.color)}
-              />
-              <p className="clotheTotalPrice">
-                {(item.quantity * item.price).toFixed(2)}
-              </p>
-            </div>
-            <div
-              className="alertShop closed"
-              id={item.clothe + item.size + item.color}
-              onClick={() => close(item.clothe + item.size + item.color)}
-            >
-              <span className="closebtn">&times;</span>
-              Etes-vous sûr de vouloir supprimer cet article de votre panier ?
-              <div className="checkChoice">
-                <p className="confirm" onClick={() => removeFromBasket(item)}>
-                  oui
-                </p>
-                <p
-                  className="abort"
-                  onClick={() => close(item.clothe + item.size + item.color)}
-                >
-                  non, je veux le conserver
-                </p>
+              <div
+                className="alertShop closed"
+                id={item.clothe + item.size + item.color}
+                onClick={() => close(item.clothe + item.size + item.color)}
+              >
+                <span className="closebtn">&times;</span>
+                Etes-vous sûr de vouloir supprimer cet article de votre panier ?
+                <div className="checkChoice">
+                  <p className="confirm" onClick={() => removeFromBasket(item)}>
+                    oui
+                  </p>
+                  <p
+                    className="abort"
+                    onClick={() => close(item.clothe + item.size + item.color)}
+                  >
+                    non, je veux le conserver
+                  </p>
+                </div>
               </div>
-            </div>
 
-            {showModal && (
-              <Modal
-                showModal={showModal}
-                setShowModal={setShowModal}
-                id={modalId}
-                className="ShoppingCartWhenModal"
-              />
-            )}
+              {showModal && (
+                <Modal
+                  showModal={showModal}
+                  setShowModal={setShowModal}
+                  id={modalId}
+                  className="ShoppingCartWhenModal"
+                />
+              )}
+            </div>
+          ))}
+        {clothes && basket.length && (
+          <div className="clothesTotalPrice">
+            <p className="clothePriceLabel">Montant Total</p>
+            <p className="clotheTotalAmount">{getTotalPrice()} €</p>
           </div>
-        ))}
-      {clothes && basket.length && (
-        <div className="clothesTotalPrice">
-          <p className="clothePriceLabel">Montant Total</p>
-          <p className="clotheTotalAmount">{getTotalPrice()} €</p>
-        </div>
-      )}
-      {!basket.length && (
-        <p className="shopEmptyMessage">
-          Vous n'avez encore rien dans le panier, c'est dommage :D
-        </p>
-      )}
-    </div>
+        )}
+        {!basket.length && (
+          <p className="shopEmptyMessage">
+            Vous n'avez encore rien dans le panier, c'est dommage :D
+          </p>
+        )}
+      </div>
+      <Footer opinions={opinions} />
+    </>
   );
 };
 

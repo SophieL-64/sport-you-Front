@@ -46,19 +46,15 @@ const Footer = (props) => {
         </p>
         <p className="footer-text">
           Ou contactez-nous directement via notre{" "}
-          <strong>
-            <Link to={`/form`} className="footer-links">
-              formulaire en ligne
-            </Link>
-          </strong>
+          <Link to={`/form`} className="footer-links">
+            <strong>formulaire en ligne</strong>
+          </Link>
         </p>
         <p className="footer-text">Nous rejoindre !</p>
         <p className="footer-text">
-          <strong>
-            <Link to={`/faq`} className="footer-links">
-              Foire Aux Questions
-            </Link>
-          </strong>
+          <Link to={`/faq`} className="footer-links">
+            <strong>Foire Aux Questions</strong>
+          </Link>
         </p>
       </div>
       <div className="footer-section">
