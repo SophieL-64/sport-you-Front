@@ -5,6 +5,10 @@
   text-align: center;
 }
 
+.adminImgApercu {
+  height: 15em;
+}
+
 .adminChamp {
   display: flex;
 }

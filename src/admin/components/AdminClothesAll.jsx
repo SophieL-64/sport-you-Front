@@ -47,8 +47,8 @@ const ClothesAll = (props) => {
                 <td>{clothe.target}</td>
                 <td>
                   <Link to={`/admin/clothesEdit/${clothe.id}`}>
-                    <MdEdit className="actionIcon" />
-                  </Link>
+                    <MdEdit className="actionIcon" color="black" />
+                  </Link>{" "}
                   <BsFillTrashFill
                     className="actionIcon"
                     onClick={() => {

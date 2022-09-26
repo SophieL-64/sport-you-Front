@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import SectionsOptions from "./SectionsOptions";
 import BrandsOptions from "./BrandsOptions";
@@ -125,7 +125,7 @@ const AdminClothesAdd = () => {
 
   useEffect(() => {
     if (isSuccess?.uploadOk) {
-      const timer = setTimeout(() => navigate(0), 2000);
+      const timer = setTimeout(() => navigate(-1), 2000);
       return () => clearTimeout(timer);
     }
   }, [isSuccess]);
@@ -159,6 +159,9 @@ const AdminClothesAdd = () => {
 
   return (
     <div>
+      <Link to="/admin/clothes">
+        <p className="return">Retour</p>
+      </Link>
       <h1 className="adminTitle">Ajout d'un article</h1>
       <form className="adminForm" action="submit" onSubmit={handleSubmit}>
         <div className="adminChamp">

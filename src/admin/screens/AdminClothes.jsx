@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 // import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import ClothesAll from "../components/AdminClothesAll";
+import { Link } from "react-router-dom";
 // import { Link } from "react-router-dom";
 // import "./AdminClothes.css";
 
@@ -18,6 +19,9 @@ const Clothes = () => {
   return (
     <>
       {console.log("clothes in Good", clothes)}
+      <Link to="/admin/dashboard">
+        <p className="return">Retour</p>
+      </Link>
       <h1 className="adminTitle">Gestion des articles</h1>
       <ClothesAll clothes={clothes} refresh={refresh} setRefresh={setRefresh} />
     </>
