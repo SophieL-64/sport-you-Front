@@ -1,8 +1,14 @@
+.return {
+  position: absolute;
+  top: 1.5em;
+  left: 3em;
+  font-weight: bold;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 .adminTitle {
-  background-color: var(--main-bg-color);
-  color: white;
-  padding: 3rem;
-  text-align: center;
+  justify-self: center;
 }
 
 .admin {
@@ -45,6 +51,14 @@
   border: none;
   box-shadow: 5px 5px 5px grey;
   cursor: pointer;
+}
+
+.yellow {
+  background-color: var(--second-color);
+}
+
+.light-blue {
+  background-color: var(--third-color);
 }
 
 .adminEntry:active {

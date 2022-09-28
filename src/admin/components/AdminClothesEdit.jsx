@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import SectionsOptions from "./SectionsOptions";
 import BrandsOptions from "./BrandsOptions";
@@ -12,13 +12,10 @@ const AdminClothesEdit = () => {
   let params = useParams();
   let { id } = params;
 
-  const [defaultValue, setDefaultValue] = useState(null);
+  const [defaultValue, setDefaultValue] = useState({});
   const [clotheName, setClotheName] = useState("");
   const [clotheDescription, setClotheDescription] = useState("");
-  const [clotheImage, setClotheImage] = useState({
-    file: "",
-    filepreview: null,
-  });
+  const [clotheImage, setClotheImage] = useState({});
   const [clothePrice, setClothePrice] = useState();
   const [clotheSectionId, setClotheSectionId] = useState();
   const [clotheBrandId, setClotheBrandId] = useState();
@@ -48,8 +45,13 @@ const AdminClothesEdit = () => {
       setClotheSectionId(res.data[0].sections_id);
       setClotheBrandId(res.data[0].brands_id);
       setClotheTargetId(res.data[0].targets_id);
+      setClotheImage({
+        filepreview: res.data[0].image,
+      });
     });
   }, []);
+
+  console.log("defaultValue", defaultValue);
 
   const editImg = (event) => {
     setClotheImage({
@@ -60,15 +62,23 @@ const AdminClothesEdit = () => {
   };
   //charge données pré-existantes : table de jointure sizes //
   useEffect(() => {
+    let SArr = [];
     axios.get(`http://localhost:5000/sizes/clotheEdit/${id}`).then((res) => {
-      setClotheSizesId(res.data);
+      for (const size of res.data) {
+        SArr.push(size.sizes_id);
+      }
+      setClotheSizesId(SArr);
     });
   }, []);
 
   //charge données pré-existantes : table de jointure colors//
   useEffect(() => {
+    let CArr = [];
     axios.get(`http://localhost:5000/colors/clotheEdit/${id}`).then((res) => {
-      setClotheColorsId(res.data);
+      for (const color of res.data) {
+        CArr.push(color.colors_id);
+      }
+      setClotheColorsId(CArr);
     });
   }, []);
 
@@ -91,47 +101,25 @@ const AdminClothesEdit = () => {
       .then((res) => setTargets(res.data));
   }, []);
 
-  // pour le mapping des tailles disponibles dans menu déroulant
+  // pour le mapping de toutes les tailles dans menu déroulant
   useEffect(() => {
     axios.get(`http://localhost:5000/sizes`).then((res) => setSizes(res.data));
   }, []);
-  // pour le mapping des coloris disponibles dans menu déroulant
+  // pour le mapping de tous les coloris dans menu déroulant
   useEffect(() => {
     axios
       .get(`http://localhost:5000/colors`)
       .then((res) => setColors(res.data));
   }, []);
 
-  // console.log(
-  //   "clotheName",
-  //   clotheName,
-  //   "clotheDescription",
-  //   clotheDescription,
-  //   "clotheImage.file",
-  //   clotheImage.file,
-  //   "clothePrice",
-  //   clothePrice,
-  //   "clotheSectionId",
-  //   clotheSectionId,
-  //   "clotheBrandId",
-  //   clotheBrandId,
-  //   "clotheTargetId",
-  //   clotheTargetId,
-  //   "clotheSizesId",
-  //   clotheSizesId,
-  //   "clotheColorsId",
-  //   clotheColorsId
-  // );
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-
     const formdata = new FormData();
     clotheName !== defaultValue.name && formdata.append("name", clotheName);
     clotheDescription !== defaultValue.description &&
       formdata.append("description", clotheDescription);
     clotheImage.filepreview !== defaultValue.image &&
       formdata.append("image", clotheImage.file);
-
     clothePrice !== defaultValue.price && formdata.append("price", clothePrice);
     clotheSectionId !== defaultValue.sections_id &&
       formdata.append("sections_id", clotheSectionId);
@@ -143,9 +131,13 @@ const AdminClothesEdit = () => {
       formdata.append("sizesAvailables", clotheSizesId);
     clotheColorsId !== defaultValue.colorsAvailables &&
       formdata.append("colorsAvailables", clotheColorsId);
+
     axios
       .put(`http://localhost:5000/clothes/edit/${id}`, formdata, {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Accept: "application/json",
+        },
       })
       .then((res) => {
         console.warn(res);
@@ -163,9 +155,11 @@ const AdminClothesEdit = () => {
       });
   };
 
+  console.log("FormData", FormData);
+
   useEffect(() => {
     if (isSuccess?.uploadOk) {
-      const timer = setTimeout(() => navigate(0), 2000);
+      const timer = setTimeout(() => navigate(-1), 2000);
       return () => clearTimeout(timer);
     }
   }, [isSuccess]);
@@ -183,22 +177,33 @@ const AdminClothesEdit = () => {
 
   function handleSizesCheckboxes(e) {
     let sizesArr = [...clotheSizesId];
-    sizesArr.includes(`${e.target.value}`)
+    sizesArr.includes(parseInt(e.target.value))
       ? (sizesArr = sizesArr.filter((size) => size != e.target.value))
-      : sizesArr.push(e.target.value);
+      : sizesArr.push(parseInt(e.target.value));
     setClotheSizesId(sizesArr);
   }
 
   function handleColorsCheckboxes(e) {
     let colorsArr = [...clotheColorsId];
-    colorsArr.includes(`${e.target.value}`)
+    colorsArr.includes(parseInt(e.target.value))
       ? (colorsArr = colorsArr.filter((color) => color != e.target.value))
-      : colorsArr.push(e.target.value);
+      : colorsArr.push(parseInt(e.target.value));
     setClotheColorsId(colorsArr);
   }
 
   return (
     <div>
+      {/* {console.log(
+        "clotheImage",
+        clotheImage,
+        "clotheImage.filepreview",
+        clotheImage.filepreview,
+        "defaultValue.image",
+        defaultValue.image
+      )} */}
+      <Link to="/admin/clothes">
+        <p className="return">Retour</p>
+      </Link>
       <h1 className="adminTitle">Modification de l'article</h1>
       <h2 className="adminTitle">{clotheName}</h2>
       <form className="adminForm" action="submit" onSubmit={handleSubmit}>
@@ -248,14 +253,14 @@ const AdminClothesEdit = () => {
           <input
             className="adminInput"
             type="file"
-            name="clotheImg"
+            name="image"
             onChange={editImg}
           />
-          {clotheImage.filepreview !== null ? (
+          {clotheImage.filepreview ? (
             <img
               className="adminImgApercu"
               src={
-                clotheImage.filepreview !== defaultValue.image
+                clotheImage.filepreview != defaultValue.image
                   ? clotheImage.filepreview
                   : `http://localhost:5000/images/clothes/${clotheImage.filepreview}`
               }
@@ -351,10 +356,18 @@ const AdminClothesEdit = () => {
           <div className="adminCheckbox">
             {sizes.map((size) => (
               <label className="adminBox" key={size.id}>
+                {/* {console.log(
+                  "clotheSizesId",
+                  clotheSizesId,
+                  "size.id",
+                  size.id,
+                  "clotheSizesId.includes(size.id)",
+                  clotheSizesId.includes(size.id)
+                )} */}
                 <input
                   type="checkbox"
                   value={size.id}
-                  checked={clotheSizesId.includes(`${size.id}`)}
+                  checked={clotheSizesId.includes(size.id)}
                   onChange={(e) => handleSizesCheckboxes(e)}
                 />{" "}
                 {size.size}
@@ -362,7 +375,7 @@ const AdminClothesEdit = () => {
             ))}
           </div>
         </div>
-        {/* <div className="adminChamp2">
+        <div className="adminChamp2">
           <p className="adminLabel">Coloris disponibles</p>
           <div className="adminCheckbox">
             {colors.map((color) => (
@@ -370,14 +383,14 @@ const AdminClothesEdit = () => {
                 <input
                   type="checkbox"
                   value={color.id}
-                  checked={clotheColorsId.includes(`${color.id}`)}
+                  checked={clotheColorsId.includes(color.id)}
                   onChange={(e) => handleColorsCheckboxes(e)}
                 />{" "}
                 {color.name}
               </label>
             ))}
           </div>
-        </div> */}
+        </div>
 
         <div>
           {isSuccess !== null ? (

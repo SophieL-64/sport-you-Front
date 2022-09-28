@@ -13,6 +13,25 @@ import AdminClothes from "./admin/screens/AdminClothes";
 import AdminClothesAll from "./admin/components/AdminClothesAll";
 import AdminClothesAdd from "./admin/components/AdminClothesAdd";
 import AdminClothesEdit from "./admin/components/AdminClothesEdit";
+import AdminSizes from "./admin/screens/AdminSizes";
+import AdminSizesAll from "./admin/components/AdminSizesAll";
+import AdminSizesAdd from "./admin/components/AdminSizesAdd";
+import AdminColors from "./admin/screens/AdminColors";
+import AdminColorsAll from "./admin/components/AdminColorsAll";
+// import AdminColorsAdd from "./admin/components/AdminColorsAdd";
+// import AdminColorsEdit from "./admin/components/AdminColorsEdit";
+import AdminBrands from "./admin/screens/AdminBrands";
+import AdminBrandsAll from "./admin/components/AdminBrandsAll";
+// import AdminBrandsAdd from "./admin/components/AdminBrandsAdd";
+// import AdminBrandsEdit from "./admin/components/AdminBrandsEdit";
+import AdminSections from "./admin/screens/AdminSections";
+import AdminSectionsAll from "./admin/components/AdminSectionsAll";
+import AdminSectionsAdd from "./admin/components/AdminSectionsAdd";
+// import AdminSectionsEdit from "./admin/components/AdminSectionsEdit";
+import AdminTargets from "./admin/screens/AdminTargets";
+import AdminTargetsAll from "./admin/components/AdminTargetsAll";
+import AdminTargetsAdd from "./admin/components/AdminTargetsAdd";
+// import AdminTargetsEdit from "./admin/components/AdminTargetsEdit";
 import AdminFeedbacks from "./admin/screens/AdminFeedbacks";
 import "./App.css";
 
@@ -119,6 +138,29 @@ function App() {
           <Route path="/admin/clothesAll" element={<AdminClothesAll />} />
           <Route path="/admin/clothesAdd" element={<AdminClothesAdd />} />
           <Route path="/admin/clothesEdit/:id" element={<AdminClothesEdit />} />
+          <Route path="/admin/sizes" element={<AdminSizes />} />
+          <Route path="/admin/sizesAll" element={<AdminSizesAll />} />
+          <Route path="/admin/sizesAdd" element={<AdminSizesAdd />} />
+          {/* <Route path="/admin/sizesEdit/:id" element={<AdminSizesEdit />} /> */}
+          <Route path="/admin/colors" element={<AdminColors />} />
+          <Route path="/admin/colorsAll" element={<AdminColorsAll />} />
+          {/* <Route path="/admin/colorsAdd" element={<AdminColorsAdd />} />
+          <Route path="/admin/colorsEdit/:id" element={<AdminColorsEdit />} /> */}
+          <Route path="/admin/brands" element={<AdminBrands />} />
+          <Route path="/admin/brandsAll" element={<AdminBrandsAll />} />
+          {/* <Route path="/admin/brandsAdd" element={<AdminBrandsAdd />} />
+          <Route path="/admin/brandsEdit/:id" element={<AdminBrandsEdit />} /> */}
+          <Route path="/admin/sections" element={<AdminSections />} />
+          <Route path="/admin/sectionsAll" element={<AdminSectionsAll />} />
+          <Route path="/admin/sectionsAdd" element={<AdminSectionsAdd />} />
+          {/* <Route
+            path="/admin/sectionsEdit/:id"
+            element={<AdminSectionsEdit />}
+          /> */}
+          <Route path="/admin/targets" element={<AdminTargets />} />
+          <Route path="/admin/targetsAll" element={<AdminTargetsAll />} />
+          <Route path="/admin/targetsAdd" element={<AdminTargetsAdd />} />
+          {/* <Route path="/admin/targetsEdit/:id" element={<AdminTargetsEdit />} /> */}
           <Route path="/admin/feedbacks" element={<AdminFeedbacks />} />
         </Routes>
       </div>
