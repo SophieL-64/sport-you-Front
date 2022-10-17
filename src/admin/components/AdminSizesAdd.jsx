@@ -14,7 +14,7 @@ const AdminSizesAdd = () => {
     const data = {
       size: sizeAdded,
     };
-    axios.post("http://localhost:5000/sizes/add", data).then((res) => {
+    axios.post("http://localhost:5000/sizes/", data).then((res) => {
       if (res.data.success === 1) {
         setIsSuccess({
           message: "Ajout de la taille validé",

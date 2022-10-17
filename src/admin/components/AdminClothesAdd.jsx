@@ -4,6 +4,7 @@ import axios from "axios";
 import SectionsOptions from "./SectionsOptions";
 import BrandsOptions from "./BrandsOptions";
 import TargetsOptions from "./TargetsOptions";
+import { useUser } from "../../contexts/UserProvider";
 
 import "../style/AdminAddEdit.css";
 
@@ -32,6 +33,8 @@ const AdminClothesAdd = () => {
   const [sizes, setSizes] = useState([]);
   // for colors mapping
   const [colors, setColors] = useState([]);
+
+  const { userToken } = useUser();
 
   // pour le mapping des brands dans menu déroulant
   useEffect(() => {
@@ -103,9 +106,15 @@ const AdminClothesAdd = () => {
     formdata.append("targets_id", clotheTargetId);
     formdata.append("sizesAvailables", clotheSizesId);
     formdata.append("colorsAvailables", clotheColorsId);
+    // axios.post("http://localhost:5000/users/token", {
+    //   headers: { authorization: "bearer" + userToken.token },
+    // });
     axios
-      .post(`http://localhost:5000/clothes/add`, formdata, {
-        headers: { "Content-Type": "multipart/form-data" },
+      .post(`http://localhost:5000/clothes/`, formdata, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          authorization: "bearer" + userToken.token,
+        },
       })
       .then((res) => {
         console.warn(res);

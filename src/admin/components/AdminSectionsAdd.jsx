@@ -14,7 +14,7 @@ const AdminSectionsAdd = () => {
     const data = {
       name: sectionAdded,
     };
-    axios.post("http://localhost:5000/sections/add", data).then((res) => {
+    axios.post("http://localhost:5000/sections/", data).then((res) => {
       if (res.data.success === 1) {
         setIsSuccess({
           message: "Ajout du rayon validé",

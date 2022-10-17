@@ -14,7 +14,7 @@ const AdminTargetsAdd = () => {
     const data = {
       name: targetAdded,
     };
-    axios.post("http://localhost:5000/targets/add", data).then((res) => {
+    axios.post("http://localhost:5000/targets/", data).then((res) => {
       if (res.data.success === 1) {
         setIsSuccess({
           message: "Ajout de la cible commerciale validé",

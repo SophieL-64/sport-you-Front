@@ -133,7 +133,7 @@ const AdminClothesEdit = () => {
       formdata.append("colorsAvailables", clotheColorsId);
 
     axios
-      .put(`http://localhost:5000/clothes/edit/${id}`, formdata, {
+      .put(`http://localhost:5000/clothes/${id}`, formdata, {
         headers: {
           "Content-Type": "multipart/form-data",
           Accept: "application/json",
