@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 // import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useAdmin } from "../../contexts/AdminProvider";
 import { Link } from "react-router-dom";
 import { MdEdit } from "react-icons/md";
 import { BsFillTrashFill } from "react-icons/bs";
@@ -8,11 +9,17 @@ import "../style/AdminAll.css";
 
 const ClothesAll = (props) => {
   const { clothes, refresh, setRefresh } = props;
+  const { adminToken } = useAdmin();
   console.log("clothes in ClothesAll", clothes);
 
   function deleteClothe(id) {
     axios
-      .delete(`http://localhost:5000/clothes/${id}`)
+      .delete(`http://localhost:5000/clothes/${id}`, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          authorization: "bearer " + adminToken.token,
+        },
+      })
       .then(() => setRefresh(!refresh));
   }
 

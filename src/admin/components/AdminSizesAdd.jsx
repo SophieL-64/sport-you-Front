@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { useAdmin } from "../../contexts/AdminProvider";
 import axios from "axios";
 
 import "../style/AdminAddEdit.css";
@@ -8,25 +9,32 @@ const AdminSizesAdd = () => {
   const [sizeAdded, setSizeAdded] = useState("");
   const [isSuccess, setIsSuccess] = useState(null);
   const navigate = useNavigate();
+  const { adminToken } = useAdmin();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = {
       size: sizeAdded,
     };
-    axios.post("http://localhost:5000/sizes/", data).then((res) => {
-      if (res.data.success === 1) {
-        setIsSuccess({
-          message: "Ajout de la taille validé",
-          uploadOk: res.data.success,
-        });
-      } else {
-        setIsSuccess({
-          message: "Ajout de la taille refusé",
-          uploadOk: res.data.success,
-        });
-      }
-    });
+    axios
+      .post("http://localhost:5000/sizes/", data, {
+        headers: {
+          authorization: "bearer " + adminToken.token,
+        },
+      })
+      .then((res) => {
+        if (res.data.success === 1) {
+          setIsSuccess({
+            message: "Ajout de la taille validé",
+            uploadOk: res.data.success,
+          });
+        } else {
+          setIsSuccess({
+            message: "Ajout de la taille refusé",
+            uploadOk: res.data.success,
+          });
+        }
+      });
   };
 
   useEffect(() => {

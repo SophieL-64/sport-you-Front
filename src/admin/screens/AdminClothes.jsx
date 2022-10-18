@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 // import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import ClothesAll from "../components/AdminClothesAll";
+import { useAdmin } from "../../contexts/AdminProvider";
 import { Link } from "react-router-dom";
 // import { Link } from "react-router-dom";
 // import "./AdminClothes.css";
@@ -9,11 +10,18 @@ import { Link } from "react-router-dom";
 const Clothes = () => {
   const [clothes, setClothes] = useState();
   const [refresh, setRefresh] = useState(false);
+  const { adminToken } = useAdmin();
 
   useEffect(() => {
-    axios.get("http://localhost:5000/clothes/clothesAdmin").then((res) => {
-      console.log(res.data) || setClothes(res.data);
-    });
+    axios
+      .get("http://localhost:5000/clothes/clothesAdmin", {
+        headers: {
+          authorization: "bearer " + adminToken.token,
+        },
+      })
+      .then((res) => {
+        console.log(res.data) || setClothes(res.data);
+      });
   }, [refresh]);
 
   return (

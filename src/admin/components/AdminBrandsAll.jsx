@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useAdmin } from "../../contexts/AdminProvider";
 import { Link } from "react-router-dom";
 import { MdEdit } from "react-icons/md";
 import { BsFillTrashFill } from "react-icons/bs";
@@ -6,11 +7,16 @@ import "../style/AdminAll.css";
 
 const BrandsAll = (props) => {
   const { brands, refresh, setRefresh } = props;
+  const { adminToken } = useAdmin();
   console.log("brands in BrandsAll", brands);
 
   function deleteBrand(id) {
     axios
-      .delete(`http://localhost:5000/brands/${id}`)
+      .delete(`http://localhost:5000/brands/${id}`, {
+        headers: {
+          authorization: "bearer " + adminToken.token,
+        },
+      })
       .then(() => setRefresh(!refresh));
   }
 

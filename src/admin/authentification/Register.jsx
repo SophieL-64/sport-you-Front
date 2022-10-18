@@ -4,21 +4,27 @@ import { useAdmin } from "../../contexts/AdminProvider";
 import axios from "axios";
 import "../style/Admin.css";
 
-const Login = () => {
+const Register = () => {
+  const [adminName, setAdminName] = useState("");
   const [adminEmail, setAdminEmail] = useState("");
   const [adminPassword, setAdminPassword] = useState("");
   const [isSuccess, setIsSuccess] = useState(null);
   const navigate = useNavigate();
-  const { setAdminToken } = useAdmin();
+  const { adminToken } = useAdmin();
 
-  const handleLogin = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
     const data = {
+      adminName: adminName,
       email: adminEmail,
       password: adminPassword,
     };
     axios
-      .post("http://localhost:5000/admins/login", data)
+      .post("http://localhost:5000/admins", data, {
+        headers: {
+          authorization: "bearer " + adminToken.token,
+        },
+      })
       .then((res) => {
         console.log("res", res);
         if (res.data.validationErrors) {
@@ -29,11 +35,9 @@ const Login = () => {
         } else {
           console.log("res", res);
           setIsSuccess({
-            message: "Vous allez être redirigé(e) vers le tableau de bord",
+            message:
+              "Votre compte a bien été créé, vous allez être redirigé(e) vers le tableau de bord",
             uploadOk: res.data.success,
-          });
-          setAdminToken({
-            token: res.data.credentials,
           });
         }
       })
@@ -68,8 +72,23 @@ const Login = () => {
 
   return (
     <>
-      <h1 className="adminTitle">Bienvenue sur l'interface Admin</h1>
-      <form className="admin" onSubmit={handleLogin}>
+      <Link to="/admin/admins">
+        <p className="return">Retour</p>
+      </Link>
+      <h1 className="adminTitle">Ajout d'un administrateur</h1>
+      <form className="admin" onSubmit={handleRegister}>
+        <div className="adminInfo">
+          <label htmlFor="adminName">Prénom Nom</label>
+          <input
+            type="text"
+            id="adminName"
+            value={adminName}
+            onChange={(e) => {
+              setAdminName(e.target.value);
+            }}
+            required
+          />
+        </div>
         <div className="adminInfo">
           <label htmlFor="adminEmail">Email</label>
           <input
@@ -83,7 +102,7 @@ const Login = () => {
           />
         </div>
         <div className="adminInfo">
-          <label htmlFor="adminpassword">mot de passe</label>
+          <label htmlFor="adminpassword">Mot de passe</label>
           <input
             type="password"
             id="adminpassword"
@@ -100,16 +119,11 @@ const Login = () => {
           ) : null}
         </div>
         <button className="adminButton" type="submit">
-          Se connecter
+          Créer un compte
         </button>
-        <p>
-          Seul un administrateur déjà créé peut créer un nouveau compte
-          administrateur. <br></br>Pour créer un nouveau compte admin à un de
-          vos collaborateurs, merci de vous logger d'abord.
-        </p>
       </form>
     </>
   );
 };
 
-export default Login;
+export default Register;

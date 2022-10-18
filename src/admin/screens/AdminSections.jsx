@@ -1,16 +1,24 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import SectionsAll from "../components/AdminSectionsAll";
+import { useAdmin } from "../../contexts/AdminProvider";
 import { Link } from "react-router-dom";
 
 const Sections = () => {
   const [sections, setSections] = useState();
   const [refresh, setRefresh] = useState(false);
+  const { adminToken } = useAdmin();
 
   useEffect(() => {
-    axios.get("http://localhost:5000/sections/sectionsAdmin").then((res) => {
-      console.log(res.data) || setSections(res.data);
-    });
+    axios
+      .get("http://localhost:5000/sections/sectionsAdmin", {
+        headers: {
+          authorization: "bearer " + adminToken.token,
+        },
+      })
+      .then((res) => {
+        console.log(res.data) || setSections(res.data);
+      });
   }, [refresh]);
 
   return (
