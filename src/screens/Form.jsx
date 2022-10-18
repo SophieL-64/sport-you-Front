@@ -65,8 +65,7 @@ const Form = (props) => {
     };
     axios
       .post(
-        console.log("data sent", data) ||
-          "http://localhost:5000/formInputs/add",
+        console.log("data sent", data) || "http://localhost:5000/formInputs/",
         data
       )
       .then((res) => {

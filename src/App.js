@@ -7,7 +7,11 @@ import ShoppingCart from "./screens/ShoppingCart";
 import Form from "./screens/Form";
 import Faq from "./screens/Faq";
 import Opinions from "./screens/Opinions";
-import AdminHome from "./admin/screens/AdminHome";
+import Login from "./admin/authentification/Login";
+import Register from "./admin/authentification/Register";
+import Logout from "./admin/authentification/Logout";
+import AdminAdmins from "./admin/screens/AdminAdmins";
+import AdminAdminsAll from "./admin/components/AdminAdminsAll";
 import AdminDashboard from "./admin/screens/AdminDashboard";
 import AdminClothes from "./admin/screens/AdminClothes";
 import AdminClothesAll from "./admin/components/AdminClothesAll";
@@ -18,8 +22,8 @@ import AdminSizesAll from "./admin/components/AdminSizesAll";
 import AdminSizesAdd from "./admin/components/AdminSizesAdd";
 import AdminColors from "./admin/screens/AdminColors";
 import AdminColorsAll from "./admin/components/AdminColorsAll";
-// import AdminColorsAdd from "./admin/components/AdminColorsAdd";
-// import AdminColorsEdit from "./admin/components/AdminColorsEdit";
+import AdminColorsAdd from "./admin/components/AdminColorsAdd";
+import AdminColorsEdit from "./admin/components/AdminColorsEdit";
 import AdminBrands from "./admin/screens/AdminBrands";
 import AdminBrandsAll from "./admin/components/AdminBrandsAll";
 // import AdminBrandsAdd from "./admin/components/AdminBrandsAdd";
@@ -33,7 +37,9 @@ import AdminTargetsAll from "./admin/components/AdminTargetsAll";
 import AdminTargetsAdd from "./admin/components/AdminTargetsAdd";
 // import AdminTargetsEdit from "./admin/components/AdminTargetsEdit";
 import AdminFeedbacks from "./admin/screens/AdminFeedbacks";
+import AdminRoutes from "./admin/components/AdminRoutes";
 import "./App.css";
+import AdminProvider from "./contexts/AdminProvider";
 
 function App() {
   const [totalItems, setTotalItems] = useState(0);
@@ -65,106 +71,114 @@ function App() {
   return (
     <>
       <div className="app">
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <Home
-                totalItems={totalItems}
-                setTotalItems={setTotalItems}
-                getNumberProduct={getNumberProduct}
-                opinions={opinions}
-              />
-            }
-          />
-          <Route
-            path="/section/:id"
-            element={
-              <Section
-                totalItems={totalItems}
-                setTotalItems={setTotalItems}
-                getNumberProduct={getNumberProduct}
-                opinions={opinions}
-              />
-            }
-          />
-          <Route
-            path="/shopping-cart"
-            element={
-              <ShoppingCart
-                totalItems={totalItems}
-                setTotalItems={setTotalItems}
-                getNumberProduct={getNumberProduct}
-                opinions={opinions}
-              />
-            }
-          />
-          <Route
-            path="/faq"
-            element={
-              <Faq
-                totalItems={totalItems}
-                setTotalItems={setTotalItems}
-                getNumberProduct={getNumberProduct}
-                opinions={opinions}
-              />
-            }
-          />
-          <Route
-            path="/form"
-            element={
-              <Form
-                totalItems={totalItems}
-                setTotalItems={setTotalItems}
-                getNumberProduct={getNumberProduct}
-                opinions={opinions}
-              />
-            }
-          />
-          <Route
-            path="/opinions"
-            element={
-              <Opinions
-                totalItems={totalItems}
-                setTotalItems={setTotalItems}
-                getNumberProduct={getNumberProduct}
-              />
-            }
-          />
-          {/* ROUTES ADMIN */}
-          <Route path="/admin" element={<AdminHome />} />
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
-          <Route path="/admin/clothes" element={<AdminClothes />} />
-          <Route path="/admin/clothesAll" element={<AdminClothesAll />} />
-          <Route path="/admin/clothesAdd" element={<AdminClothesAdd />} />
-          <Route path="/admin/clothesEdit/:id" element={<AdminClothesEdit />} />
-          <Route path="/admin/sizes" element={<AdminSizes />} />
-          <Route path="/admin/sizesAll" element={<AdminSizesAll />} />
-          <Route path="/admin/sizesAdd" element={<AdminSizesAdd />} />
-          {/* <Route path="/admin/sizesEdit/:id" element={<AdminSizesEdit />} /> */}
-          <Route path="/admin/colors" element={<AdminColors />} />
-          <Route path="/admin/colorsAll" element={<AdminColorsAll />} />
-          {/* <Route path="/admin/colorsAdd" element={<AdminColorsAdd />} />
-          <Route path="/admin/colorsEdit/:id" element={<AdminColorsEdit />} /> */}
-          <Route path="/admin/brands" element={<AdminBrands />} />
-          <Route path="/admin/brandsAll" element={<AdminBrandsAll />} />
-          {/* <Route path="/admin/brandsAdd" element={<AdminBrandsAdd />} />
-          <Route path="/admin/brandsEdit/:id" element={<AdminBrandsEdit />} /> */}
-          <Route path="/admin/sections" element={<AdminSections />} />
-          <Route path="/admin/sectionsAll" element={<AdminSectionsAll />} />
-          <Route path="/admin/sectionsAdd" element={<AdminSectionsAdd />} />
-          {/* <Route
-            path="/admin/sectionsEdit/:id"
+        <AdminProvider>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <Home
+                  totalItems={totalItems}
+                  setTotalItems={setTotalItems}
+                  getNumberProduct={getNumberProduct}
+                  opinions={opinions}
+                />
+              }
+            />
+            <Route
+              path="/section/:id"
+              element={
+                <Section
+                  totalItems={totalItems}
+                  setTotalItems={setTotalItems}
+                  getNumberProduct={getNumberProduct}
+                  opinions={opinions}
+                />
+              }
+            />
+            <Route
+              path="/shopping-cart"
+              element={
+                <ShoppingCart
+                  totalItems={totalItems}
+                  setTotalItems={setTotalItems}
+                  getNumberProduct={getNumberProduct}
+                  opinions={opinions}
+                />
+              }
+            />
+            <Route
+              path="/faq"
+              element={
+                <Faq
+                  totalItems={totalItems}
+                  setTotalItems={setTotalItems}
+                  getNumberProduct={getNumberProduct}
+                  opinions={opinions}
+                />
+              }
+            />
+            <Route
+              path="/form"
+              element={
+                <Form
+                  totalItems={totalItems}
+                  setTotalItems={setTotalItems}
+                  getNumberProduct={getNumberProduct}
+                  opinions={opinions}
+                />
+              }
+            />
+            <Route
+              path="/opinions"
+              element={
+                <Opinions
+                  totalItems={totalItems}
+                  setTotalItems={setTotalItems}
+                  getNumberProduct={getNumberProduct}
+                />
+              }
+            />
+            {/* ROUTES ADMIN */}
+            <Route path="/login" element={<Login />} />
+            {/* DEPLACER DANS ROUTES PROTEGEES A LA FIN */}
+            <Route path="/admin" element={<AdminRoutes />}>
+              <Route path="logout" element={<Logout />} />
+              <Route path="dashboard" element={<AdminDashboard />} />
+              <Route path="register" element={<Register />} />
+              <Route path="admins" element={<AdminAdmins />} />
+              <Route path="adminAll" element={<AdminAdminsAll />} />
+              <Route path="clothes" element={<AdminClothes />} />
+              <Route path="clothesAll" element={<AdminClothesAll />} />
+              <Route path="clothesAdd" element={<AdminClothesAdd />} />
+              <Route path="clothesEdit/:id" element={<AdminClothesEdit />} />
+              <Route path="sizes" element={<AdminSizes />} />
+              <Route path="sizesAll" element={<AdminSizesAll />} />
+              <Route path="sizesAdd" element={<AdminSizesAdd />} />
+              {/* <Route path="sizesEdit/:id" element={<AdminSizesEdit />} /> */}
+              <Route path="colors" element={<AdminColors />} />
+              <Route path="colorsAll" element={<AdminColorsAll />} />
+              <Route path="colorsAdd" element={<AdminColorsAdd />} />
+              <Route path="colorsEdit/:id" element={<AdminColorsEdit />} />
+              <Route path="brands" element={<AdminBrands />} />
+              <Route path="brandsAll" element={<AdminBrandsAll />} />
+              {/* <Route path="brandsAdd" element={<AdminBrandsAdd />} />
+          <Route path="brandsEdit/:id" element={<AdminBrandsEdit />} /> */}
+              <Route path="sections" element={<AdminSections />} />
+              <Route path="sectionsAll" element={<AdminSectionsAll />} />
+              <Route path="sectionsAdd" element={<AdminSectionsAdd />} />
+              {/* <Route
+            path="sectionsEdit/:id"
             element={<AdminSectionsEdit />}
           /> */}
-          <Route path="/admin/targets" element={<AdminTargets />} />
-          <Route path="/admin/targetsAll" element={<AdminTargetsAll />} />
-          <Route path="/admin/targetsAdd" element={<AdminTargetsAdd />} />
-          {/* <Route path="/admin/targetsEdit/:id" element={<AdminTargetsEdit />} /> */}
-          <Route path="/admin/feedbacks" element={<AdminFeedbacks />} />
-        </Routes>
+              <Route path="targets" element={<AdminTargets />} />
+              <Route path="targetsAll" element={<AdminTargetsAll />} />
+              <Route path="targetsAdd" element={<AdminTargetsAdd />} />
+              {/* <Route path="targetsEdit/:id" element={<AdminTargetsEdit />} /> */}
+              <Route path="feedbacks" element={<AdminFeedbacks />} />
+            </Route>
+          </Routes>
+        </AdminProvider>
       </div>
-      <div></div>
     </>
   );
 }

@@ -1,36 +1,58 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useAdmin } from "../../contexts/AdminProvider";
 import axios from "axios";
-
+import { useAdmin } from "../../contexts/AdminProvider";
 import "../style/AdminAddEdit.css";
 
-const AdminSectionsAdd = () => {
-  const [sectionAdded, setSectionAdded] = useState("");
+const AdminColorsAdd = () => {
+  const [colorName, setColorName] = useState("");
+  const [colorImage, setColorImage] = useState({
+    file: "",
+    filepreview: null,
+  });
+
   const [isSuccess, setIsSuccess] = useState(null);
   const navigate = useNavigate();
   const { adminToken } = useAdmin();
 
+  const editImg = (event) => {
+    setColorImage({
+      ...colorImage,
+      file: event.target.files[0],
+      filepreview: URL.createObjectURL(event.target.files[0]),
+    });
+  };
+  console.log(
+    "colorName",
+    colorName,
+    "colorImage.file",
+    colorImage.file,
+    "clothePrice"
+  );
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const data = {
-      name: sectionAdded,
-    };
+
+    const formdata = new FormData();
+    formdata.append("name", colorName);
+    formdata.append("image", colorImage.file);
+
     axios
-      .post("http://localhost:5000/sections", data, {
+      .post(`http://localhost:5000/colors/`, formdata, {
         headers: {
+          "Content-Type": "multipart/form-data",
           authorization: "bearer " + adminToken.token,
         },
       })
       .then((res) => {
+        console.warn(res);
         if (res.data.success === 1) {
           setIsSuccess({
-            message: "Ajout du rayon validé",
+            message: "Ajout de la couleur validé",
             uploadOk: res.data.success,
           });
         } else {
           setIsSuccess({
-            message: "Ajout du rayon refusé",
+            message: "Ajout de la couleur refusé",
             uploadOk: res.data.success,
           });
         }
@@ -57,30 +79,49 @@ const AdminSectionsAdd = () => {
 
   return (
     <div>
-      <Link to="/admin/sizes">
+      <Link to="/admin/colors">
         <p className="return">Retour</p>
       </Link>
-      <h1 className="adminTitle">Ajout d'un rayon</h1>
+      <h1 className="adminTitle">Ajout d'une couleur</h1>
       <form className="adminForm" action="submit" onSubmit={handleSubmit}>
         <div className="adminChamp">
-          <label className="adminLabel" htmlFor="adminSection">
-            Taille
+          <label className="adminLabel" htmlFor="adminName">
+            Nom de la couleur
           </label>
           <div>
             <input
               className="adminInput"
               type="text"
-              id="adminSection"
-              name="adminSection"
-              placeholder="désignation du rayon"
+              id="adminName"
+              name="adminName"
+              placeholder="nom de la couleur"
               maxLength="100"
-              onChange={(e) => setSectionAdded(e.target.value)}
+              onChange={(e) => setColorName(e.target.value)}
               required
             />
             <p className="char">
-              {sectionAdded && 100 - sectionAdded.length} caractères restants
+              {colorName && 100 - colorName.length} caractères restants
             </p>
           </div>
+        </div>
+        <div className="adminChamp">
+          <label htmlFor="adminImage" className="adminLabel">
+            Image
+          </label>
+          <input
+            className="adminInput"
+            type="file"
+            name="colorImg"
+            onChange={editImg}
+            required
+          />
+          {colorImage.filepreview !== null ? (
+            <img
+              className="adminImgApercu"
+              src={colorImage.filepreview}
+              alt="UploadImage"
+            />
+          ) : null}
         </div>
         <div>
           {isSuccess !== null ? (
@@ -95,4 +136,4 @@ const AdminSectionsAdd = () => {
   );
 };
 
-export default AdminSectionsAdd;
+export default AdminColorsAdd;

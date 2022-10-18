@@ -1,15 +1,21 @@
 import axios from "axios";
+import { useAdmin } from "../../contexts/AdminProvider";
 import { Link } from "react-router-dom";
 import { BsFillTrashFill } from "react-icons/bs";
 import "../style/AdminAll.css";
 
 const SizesAll = (props) => {
   const { sizes, refresh, setRefresh } = props;
+  const { adminToken } = useAdmin();
   console.log("sizes in SizesAll", sizes);
 
   function deleteSize(id) {
     axios
-      .delete(`http://localhost:5000/sizes/${id}`)
+      .delete(`http://localhost:5000/sizes/${id}`, {
+        headers: {
+          authorization: "bearer " + adminToken.token,
+        },
+      })
       .then(() => setRefresh(!refresh));
   }
 

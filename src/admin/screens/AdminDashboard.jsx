@@ -2,13 +2,22 @@
 // import { useNavigate } from "react-router-dom";
 // import axios from "axios";
 import { Link } from "react-router-dom";
+import Logout from "../authentification/Logout";
 import "../style/Admin.css";
 
 const Dashboard = () => {
   return (
     <>
       <h1 className="adminTitle">Bienvenue sur le dashboard</h1>
+      <Link to="/logout">
+        <Logout />
+      </Link>
       <div className="admin">
+        <Link to={`/admin/admins`}>
+          <button className="adminEntry">
+            Gérer les comptes administrateurs
+          </button>
+        </Link>
         <Link to={`/admin/clothes`}>
           <button className="adminEntry">Gérer les articles</button>
         </Link>

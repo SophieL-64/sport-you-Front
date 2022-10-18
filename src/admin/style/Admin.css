@@ -38,6 +38,19 @@
   cursor: pointer;
 }
 
+.logOutButton {
+  background-color: var(--main-bg-color);
+  /* border-radius: 5px; */
+  color: white;
+  padding: 15px;
+  border: none;
+  /* box-shadow: 5px 5px 5px grey; */
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
 .adminButton:active {
   transform: translate(1px, 2px);
 }

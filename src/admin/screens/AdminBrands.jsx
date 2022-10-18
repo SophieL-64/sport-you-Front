@@ -1,16 +1,24 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import BrandsAll from "../components/AdminBrandsAll";
+import { useAdmin } from "../../contexts/AdminProvider";
 import { Link } from "react-router-dom";
 
 const Brands = () => {
   const [brands, setBrands] = useState();
   const [refresh, setRefresh] = useState(false);
+  const { adminToken } = useAdmin();
 
   useEffect(() => {
-    axios.get("http://localhost:5000/brands/brandsAdmin").then((res) => {
-      console.log(res.data) || setBrands(res.data);
-    });
+    axios
+      .get("http://localhost:5000/brands", {
+        headers: {
+          authorization: "bearer " + adminToken.token,
+        },
+      })
+      .then((res) => {
+        console.log(res.data) || setBrands(res.data);
+      });
   }, [refresh]);
 
   return (

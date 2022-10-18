@@ -4,6 +4,7 @@ import axios from "axios";
 import SectionsOptions from "./SectionsOptions";
 import BrandsOptions from "./BrandsOptions";
 import TargetsOptions from "./TargetsOptions";
+import { useAdmin } from "../../contexts/AdminProvider";
 
 import "../style/AdminAddEdit.css";
 
@@ -33,33 +34,62 @@ const AdminClothesAdd = () => {
   // for colors mapping
   const [colors, setColors] = useState([]);
 
+  const { adminToken } = useAdmin();
+
   // pour le mapping des brands dans menu déroulant
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/brands`)
+      .get(`http://localhost:5000/brands`, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          authorization: "bearer " + adminToken.token,
+        },
+      })
       .then((res) => setBrands(res.data));
   }, []);
   // pour le mapping des sections dans menu déroulant
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/sections`)
+      .get(`http://localhost:5000/sections/sectionsAdmin`, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          authorization: "bearer " + adminToken.token,
+        },
+      })
       .then((res) => setSections(res.data));
   }, []);
   // pour le mapping des targets dans menu déroulant
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/targets`)
+      .get(`http://localhost:5000/targets/targetsAdmin`, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          authorization: "bearer " + adminToken.token,
+        },
+      })
       .then((res) => setTargets(res.data));
   }, []);
 
   // pour le mapping des tailles disponibles dans menu déroulant
   useEffect(() => {
-    axios.get(`http://localhost:5000/sizes`).then((res) => setSizes(res.data));
+    axios
+      .get(`http://localhost:5000/sizes/sizesAdmin`, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          authorization: "bearer " + adminToken.token,
+        },
+      })
+      .then((res) => setSizes(res.data));
   }, []);
   // pour le mapping des coloris disponibles dans menu déroulant
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/colors`)
+      .get(`http://localhost:5000/colors/colorsAdmin`, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          authorization: "bearer " + adminToken.token,
+        },
+      })
       .then((res) => setColors(res.data));
   }, []);
 
@@ -103,9 +133,13 @@ const AdminClothesAdd = () => {
     formdata.append("targets_id", clotheTargetId);
     formdata.append("sizesAvailables", clotheSizesId);
     formdata.append("colorsAvailables", clotheColorsId);
+
     axios
-      .post(`http://localhost:5000/clothes/add`, formdata, {
-        headers: { "Content-Type": "multipart/form-data" },
+      .post(`http://localhost:5000/clothes/`, formdata, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          authorization: "bearer " + adminToken.token,
+        },
       })
       .then((res) => {
         console.warn(res);

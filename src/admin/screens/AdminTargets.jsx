@@ -1,16 +1,24 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import TargetsAll from "../components/AdminTargetsAll";
+import { useAdmin } from "../../contexts/AdminProvider";
 import { Link } from "react-router-dom";
 
 const Targets = () => {
   const [targets, setTargets] = useState();
   const [refresh, setRefresh] = useState(false);
+  const { adminToken } = useAdmin();
 
   useEffect(() => {
-    axios.get("http://localhost:5000/targets/targetsAdmin").then((res) => {
-      console.log(res.data) || setTargets(res.data);
-    });
+    axios
+      .get("http://localhost:5000/targets/targetsAdmin", {
+        headers: {
+          authorization: "bearer " + adminToken.token,
+        },
+      })
+      .then((res) => {
+        console.log(res.data) || setTargets(res.data);
+      });
   }, [refresh]);
 
   return (

@@ -1,32 +1,39 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
-
+import { useAdmin } from "../../contexts/AdminProvider";
 import "../style/AdminAddEdit.css";
 
 const AdminTargetsAdd = () => {
   const [targetAdded, setTargetAdded] = useState("");
   const [isSuccess, setIsSuccess] = useState(null);
   const navigate = useNavigate();
+  const { adminToken } = useAdmin();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = {
       name: targetAdded,
     };
-    axios.post("http://localhost:5000/targets/add", data).then((res) => {
-      if (res.data.success === 1) {
-        setIsSuccess({
-          message: "Ajout de la cible commerciale validé",
-          uploadOk: res.data.success,
-        });
-      } else {
-        setIsSuccess({
-          message: "Ajout de la cible commerciale refusé",
-          uploadOk: res.data.success,
-        });
-      }
-    });
+    axios
+      .post("http://localhost:5000/targets", data, {
+        headers: {
+          authorization: "bearer " + adminToken.token,
+        },
+      })
+      .then((res) => {
+        if (res.data.success === 1) {
+          setIsSuccess({
+            message: "Ajout de la cible commerciale validé",
+            uploadOk: res.data.success,
+          });
+        } else {
+          setIsSuccess({
+            message: "Ajout de la cible commerciale refusé",
+            uploadOk: res.data.success,
+          });
+        }
+      });
   };
 
   useEffect(() => {

@@ -5,12 +5,14 @@ import SectionsOptions from "./SectionsOptions";
 import BrandsOptions from "./BrandsOptions";
 import TargetsOptions from "./TargetsOptions";
 import { useParams } from "react-router-dom";
+import { useAdmin } from "../../contexts/AdminProvider";
 
 import "../style/AdminAddEdit.css";
 
 const AdminClothesEdit = () => {
   let params = useParams();
   let { id } = params;
+  const { adminToken } = useAdmin();
 
   const [defaultValue, setDefaultValue] = useState({});
   const [clotheName, setClotheName] = useState("");
@@ -37,18 +39,25 @@ const AdminClothesEdit = () => {
 
   //charge données pré-existantes : table clothes //
   useEffect(() => {
-    axios.get(`http://localhost:5000/clothes/edit/${id}`).then((res) => {
-      setDefaultValue(res.data[0]);
-      setClotheName(res.data[0].name);
-      setClotheDescription(res.data[0].description);
-      setClothePrice(res.data[0].price);
-      setClotheSectionId(res.data[0].sections_id);
-      setClotheBrandId(res.data[0].brands_id);
-      setClotheTargetId(res.data[0].targets_id);
-      setClotheImage({
-        filepreview: res.data[0].image,
+    axios
+      .get(`http://localhost:5000/clothes/edit/${id}`, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          authorization: "bearer " + adminToken.token,
+        },
+      })
+      .then((res) => {
+        setDefaultValue(res.data[0]);
+        setClotheName(res.data[0].name);
+        setClotheDescription(res.data[0].description);
+        setClothePrice(res.data[0].price);
+        setClotheSectionId(res.data[0].sections_id);
+        setClotheBrandId(res.data[0].brands_id);
+        setClotheTargetId(res.data[0].targets_id);
+        setClotheImage({
+          filepreview: res.data[0].image,
+        });
       });
-    });
   }, []);
 
   console.log("defaultValue", defaultValue);
@@ -63,52 +72,93 @@ const AdminClothesEdit = () => {
   //charge données pré-existantes : table de jointure sizes //
   useEffect(() => {
     let SArr = [];
-    axios.get(`http://localhost:5000/sizes/clotheEdit/${id}`).then((res) => {
-      for (const size of res.data) {
-        SArr.push(size.sizes_id);
-      }
-      setClotheSizesId(SArr);
-    });
+    axios
+      .get(`http://localhost:5000/sizes/clotheEdit/${id}`, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          authorization: "bearer " + adminToken.token,
+        },
+      })
+      .then((res) => {
+        for (const size of res.data) {
+          SArr.push(size.sizes_id);
+        }
+        setClotheSizesId(SArr);
+      });
   }, []);
 
   //charge données pré-existantes : table de jointure colors//
   useEffect(() => {
     let CArr = [];
-    axios.get(`http://localhost:5000/colors/clotheEdit/${id}`).then((res) => {
-      for (const color of res.data) {
-        CArr.push(color.colors_id);
-      }
-      setClotheColorsId(CArr);
-    });
+    axios
+      .get(`http://localhost:5000/colors/clotheEdit/${id}`, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          authorization: "bearer " + adminToken.token,
+        },
+      })
+      .then((res) => {
+        for (const color of res.data) {
+          CArr.push(color.colors_id);
+        }
+        setClotheColorsId(CArr);
+      });
   }, []);
 
   // pour le mapping des brands dans menu déroulant
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/brands`)
+      .get(`http://localhost:5000/brands`, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          authorization: "bearer " + adminToken.token,
+        },
+      })
       .then((res) => setBrands(res.data));
   }, []);
   // pour le mapping des sections dans menu déroulant
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/sections`)
+      .get(`http://localhost:5000/sections/sectionsAdmin`, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          authorization: "bearer " + adminToken.token,
+        },
+      })
       .then((res) => setSections(res.data));
   }, []);
   // pour le mapping des targets dans menu déroulant
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/targets`)
+      .get(`http://localhost:5000/targets/targetsAdmin`, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          authorization: "bearer " + adminToken.token,
+        },
+      })
       .then((res) => setTargets(res.data));
   }, []);
 
   // pour le mapping de toutes les tailles dans menu déroulant
   useEffect(() => {
-    axios.get(`http://localhost:5000/sizes`).then((res) => setSizes(res.data));
+    axios
+      .get(`http://localhost:5000/sizes/sizesAdmin`, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          authorization: "bearer " + adminToken.token,
+        },
+      })
+      .then((res) => setSizes(res.data));
   }, []);
   // pour le mapping de tous les coloris dans menu déroulant
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/colors`)
+      .get(`http://localhost:5000/colors/colorsAdmin`, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          authorization: "bearer " + adminToken.token,
+        },
+      })
       .then((res) => setColors(res.data));
   }, []);
 
@@ -133,10 +183,11 @@ const AdminClothesEdit = () => {
       formdata.append("colorsAvailables", clotheColorsId);
 
     axios
-      .put(`http://localhost:5000/clothes/edit/${id}`, formdata, {
+      .put(`http://localhost:5000/clothes/${id}`, formdata, {
         headers: {
           "Content-Type": "multipart/form-data",
           Accept: "application/json",
+          authorization: "bearer " + adminToken.token,
         },
       })
       .then((res) => {
@@ -205,7 +256,7 @@ const AdminClothesEdit = () => {
         <p className="return">Retour</p>
       </Link>
       <h1 className="adminTitle">Modification de l'article</h1>
-      <h2 className="adminTitle">{clotheName}</h2>
+
       <form className="adminForm" action="submit" onSubmit={handleSubmit}>
         <div className="adminChamp">
           <label className="adminLabel" htmlFor="adminName">
