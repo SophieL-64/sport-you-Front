@@ -1,36 +1,60 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useAdmin } from "../../contexts/AdminProvider";
 import axios from "axios";
+import { useParams } from "react-router-dom";
+import { useAdmin } from "../../contexts/AdminProvider";
 
 import "../style/AdminAddEdit.css";
 
-const AdminSectionsAdd = () => {
-  const [sectionAdded, setSectionAdded] = useState("");
-  const [isSuccess, setIsSuccess] = useState(null);
-  const navigate = useNavigate();
+const AdminTargetsEdit = () => {
+  let params = useParams();
+  let { id } = params;
   const { adminToken } = useAdmin();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const data = {
-      name: sectionAdded,
-    };
+  const [defaultValue, setDefaultValue] = useState({});
+  const [targetName, setTargetName] = useState("");
+  const [isSuccess, setIsSuccess] = useState(null);
+  const navigate = useNavigate();
+
+  //charge données pré-existantes : table sections //
+  useEffect(() => {
     axios
-      .post("http://localhost:5000/sections", data, {
+      .get(`http://localhost:5000/targets/edit/${id}`, {
         headers: {
           authorization: "bearer " + adminToken.token,
         },
       })
       .then((res) => {
+        console.log("res.data", res.data[0].name);
+        setDefaultValue(res.data[0]);
+        setTargetName(res.data[0].name);
+      });
+  }, []);
+
+  console.log("targetName", targetName);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const data = {
+      name: targetName,
+    };
+
+    axios
+      .put(`http://localhost:5000/targets/${id}`, data, {
+        headers: {
+          authorization: "bearer " + adminToken.token,
+        },
+      })
+      .then((res) => {
+        console.warn(res);
         if (res.data.success === 1) {
           setIsSuccess({
-            message: "Ajout du rayon validé",
+            message: "Modification de la cible commerciale validée",
             uploadOk: res.data.success,
           });
         } else {
           setIsSuccess({
-            message: "Ajout du rayon refusé",
+            message: "Modification de la cible commerciale refusée",
             uploadOk: res.data.success,
           });
         }
@@ -57,28 +81,29 @@ const AdminSectionsAdd = () => {
 
   return (
     <div>
-      <Link to="/admin/sizes">
+      <Link to="/admin/targets">
         <p className="return">Retour</p>
       </Link>
-      <h1 className="adminTitle">Ajout d'un rayon</h1>
+      <h1 className="adminTitle">Modification de la cible commerciale</h1>
+
       <form className="adminForm" action="submit" onSubmit={handleSubmit}>
         <div className="adminChamp">
           <label className="adminLabel" htmlFor="adminSection">
-            Nom du rayon
+            Nom de la cible commerciale
           </label>
           <div>
             <input
               className="adminInput"
               type="text"
-              id="adminSection"
-              name="adminSection"
-              placeholder="désignation du rayon"
+              id="adminTarget"
+              name="adminTarget"
+              value={targetName}
               maxLength="100"
-              onChange={(e) => setSectionAdded(e.target.value)}
+              onChange={(e) => setTargetName(e.target.value)}
               required
             />
             <p className="char">
-              {sectionAdded && 100 - sectionAdded.length} caractères restants
+              {targetName && 100 - targetName.length} caractères restants
             </p>
           </div>
         </div>
@@ -88,11 +113,11 @@ const AdminSectionsAdd = () => {
           ) : null}
         </div>
         <button className="formButton" type="submit">
-          Ajouter
+          Modifier
         </button>
       </form>
     </div>
   );
 };
 
-export default AdminSectionsAdd;
+export default AdminTargetsEdit;

@@ -1,62 +1,41 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
-import { useParams } from "react-router-dom";
 import { useAdmin } from "../../contexts/AdminProvider";
-
 import "../style/AdminAddEdit.css";
 
-const AdminColorsEdit = () => {
-  let params = useParams();
-  let { id } = params;
-  const { adminToken } = useAdmin();
+const AdminBrandsAdd = () => {
+  const [brandName, setBrandName] = useState("");
+  const [brandImage, setBrandImage] = useState({
+    file: "",
+    filepreview: null,
+  });
+  const [brandCountry, setBrandCountry] = useState("");
 
-  const [defaultValue, setDefaultValue] = useState({});
-  const [colorName, setColorName] = useState("");
-  const [colorImage, setColorImage] = useState({});
   const [isSuccess, setIsSuccess] = useState(null);
   const navigate = useNavigate();
-
-  //charge données pré-existantes : table colors //
-  useEffect(() => {
-    axios
-      .get(`http://localhost:5000/colors/edit/${id}`, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          authorization: "bearer " + adminToken.token,
-        },
-      })
-      .then((res) => {
-        setDefaultValue(res.data[0]);
-        setColorName(res.data[0].name);
-        setColorImage({
-          filepreview: res.data[0].image,
-        });
-      });
-  }, []);
-
-  console.log("defaultValue", defaultValue);
+  const { adminToken } = useAdmin();
 
   const editImg = (event) => {
-    setColorImage({
-      ...colorImage,
+    setBrandImage({
+      ...brandImage,
       file: event.target.files[0],
       filepreview: URL.createObjectURL(event.target.files[0]),
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     const formdata = new FormData();
-    colorName !== defaultValue.name && formdata.append("name", colorName);
-    colorImage.filepreview !== defaultValue.image &&
-      formdata.append("image", colorImage.file);
+    formdata.append("name", brandName);
+    formdata.append("logo", brandImage.file);
+    formdata.append("country", brandCountry);
 
     axios
-      .put(`http://localhost:5000/colors/${id}`, formdata, {
+      .post(`http://localhost:5000/brands/`, formdata, {
         headers: {
           "Content-Type": "multipart/form-data",
-          Accept: "application/json",
           authorization: "bearer " + adminToken.token,
         },
       })
@@ -64,19 +43,17 @@ const AdminColorsEdit = () => {
         console.warn(res);
         if (res.data.success === 1) {
           setIsSuccess({
-            message: "Modification de la couleur validée",
+            message: "Ajout de la marque validé",
             uploadOk: res.data.success,
           });
         } else {
           setIsSuccess({
-            message: "Modification de la couleur refusée",
+            message: "Ajout de la marque refusé",
             uploadOk: res.data.success,
           });
         }
       });
   };
-
-  console.log("FormData", FormData);
 
   useEffect(() => {
     if (isSuccess?.uploadOk) {
@@ -98,15 +75,14 @@ const AdminColorsEdit = () => {
 
   return (
     <div>
-      <Link to="/admin/colors">
+      <Link to="/admin/brands">
         <p className="return">Retour</p>
       </Link>
-      <h1 className="adminTitle">Modification de la couleur</h1>
-
+      <h1 className="adminTitle">Ajout d'une marque</h1>
       <form className="adminForm" action="submit" onSubmit={handleSubmit}>
         <div className="adminChamp">
           <label className="adminLabel" htmlFor="adminName">
-            Nom de la couleur
+            Nom de la marque
           </label>
           <div>
             <input
@@ -114,36 +90,54 @@ const AdminColorsEdit = () => {
               type="text"
               id="adminName"
               name="adminName"
-              value={colorName}
+              placeholder="nom de la marque"
               maxLength="100"
-              onChange={(e) => setColorName(e.target.value)}
+              onChange={(e) => setBrandName(e.target.value)}
+              required
             />
             <p className="char">
-              {colorName && 100 - colorName.length} caractères restants
+              {brandName && 100 - brandName.length} caractères restants
             </p>
           </div>
         </div>
         <div className="adminChamp">
           <label htmlFor="adminImage" className="adminLabel">
-            Image
+            Logo
           </label>
           <input
             className="adminInput"
             type="file"
-            name="image"
+            name="brandImg"
             onChange={editImg}
+            required
           />
-          {colorImage.filepreview ? (
+          {brandImage.filepreview !== null ? (
             <img
               className="adminImgApercu"
-              src={
-                colorImage.filepreview != defaultValue.image
-                  ? colorImage.filepreview
-                  : `http://localhost:5000/images/colors/${colorImage.filepreview}`
-              }
+              src={brandImage.filepreview}
               alt="UploadImage"
             />
           ) : null}
+        </div>
+        <div className="adminChamp">
+          <label className="adminLabel" htmlFor="adminCountry">
+            Pays de la marque
+          </label>
+          <div>
+            <input
+              className="adminInput"
+              type="text"
+              id="adminCountry"
+              name="adminCountry"
+              placeholder="pays de la marque"
+              maxLength="100"
+              onChange={(e) => setBrandCountry(e.target.value)}
+              required
+            />
+            <p className="char">
+              {brandCountry && 100 - brandCountry.length} caractères restants
+            </p>
+          </div>
         </div>
         <div>
           {isSuccess !== null ? (
@@ -151,11 +145,11 @@ const AdminColorsEdit = () => {
           ) : null}
         </div>
         <button className="formButton" type="submit">
-          Modifier
+          Ajouter
         </button>
       </form>
     </div>
   );
 };
 
-export default AdminColorsEdit;
+export default AdminBrandsAdd;
