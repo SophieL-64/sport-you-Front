@@ -22,18 +22,32 @@ const AdminTargetsAdd = () => {
         },
       })
       .then((res) => {
-        if (res.data.success === 1) {
+        // console.log("res", res);
+        if (res.data.validationErrors) {
+          setIsSuccess({
+            message:
+              "Ajout de la cible commerciale refusé : " +
+              res.data.validationErrors[0].message,
+            uploadOk: 0,
+          });
+        } else {
+          console.log("res", res);
           setIsSuccess({
             message: "Ajout de la cible commerciale validé",
             uploadOk: res.data.success,
           });
-        } else {
-          setIsSuccess({
-            message: "Ajout de la cible commerciale refusé",
-            uploadOk: res.data.success,
-          });
         }
-      });
+      })
+      .catch(
+        (err) =>
+          console.log("err", err) ||
+          setIsSuccess({
+            message:
+              "Ajout de la cible commerciale refusé : " +
+              err.response.data.message,
+            uploadOk: err.response.data.success,
+          })
+      );
   };
 
   useEffect(() => {
@@ -56,7 +70,7 @@ const AdminTargetsAdd = () => {
 
   return (
     <div>
-      <Link to="/admin/sizes">
+      <Link to="/admin/targets">
         <p className="return">Retour</p>
       </Link>
       <h1 className="adminTitle">Ajout d'une cible commerciale</h1>

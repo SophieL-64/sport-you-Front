@@ -37,6 +37,10 @@ import AdminTargetsAll from "./admin/components/AdminTargetsAll";
 import AdminTargetsAdd from "./admin/components/AdminTargetsAdd";
 import AdminTargetsEdit from "./admin/components/AdminTargetsEdit";
 import AdminFeedbacks from "./admin/screens/AdminFeedbacks";
+import AdminFaqs from "./admin/screens/AdminFaqs";
+import AdminFaqsAll from "./admin/components/AdminFaqsAll";
+import AdminFaqsAdd from "./admin/components/AdminFaqsAdd";
+import AdminFaqsEdit from "./admin/components/AdminFaqsEdit";
 import AdminRoutes from "./admin/components/AdminRoutes";
 import "./App.css";
 import AdminProvider from "./contexts/AdminProvider";
@@ -46,8 +50,8 @@ function App() {
   const [opinions, setOpinions] = useState(null);
 
   useEffect(() => {
-    axios.get("http://localhost:5000/formInputs/opinions").then((res) => {
-      console.log(res.data) || setOpinions(res.data);
+    axios.get("http://localhost:5000/feedbacks/opinions").then((res) => {
+      // console.log(res.data) || setOpinions(res.data);
     });
   }, []);
 
@@ -171,6 +175,10 @@ function App() {
               <Route path="targetsAdd" element={<AdminTargetsAdd />} />
               <Route path="targetsEdit/:id" element={<AdminTargetsEdit />} />
               <Route path="feedbacks" element={<AdminFeedbacks />} />
+              <Route path="faqs" element={<AdminFaqs />} />
+              <Route path="faqsAll" element={<AdminFaqsAll />} />
+              <Route path="faqsAdd" element={<AdminFaqsAdd />} />
+              <Route path="faqsEdit/:id" element={<AdminFaqsEdit />} />
             </Route>
           </Routes>
         </AdminProvider>

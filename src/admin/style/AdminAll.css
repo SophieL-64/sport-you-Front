@@ -44,3 +44,7 @@ td {
 .actionIcon {
   cursor: pointer;
 }
+
+.red {
+  background-color: var(--fourth-color);
+}

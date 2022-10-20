@@ -23,7 +23,6 @@ const Brands = () => {
 
   return (
     <>
-      {console.log("brands", brands)}
       <Link to="/admin/dashboard">
         <p className="return">Retour</p>
       </Link>

@@ -60,7 +60,7 @@ const AdminClothesEdit = () => {
       });
   }, []);
 
-  console.log("defaultValue", defaultValue);
+  // console.log("defaultValue", defaultValue);
 
   const editImg = (event) => {
     setClotheImage({
@@ -191,22 +191,34 @@ const AdminClothesEdit = () => {
         },
       })
       .then((res) => {
-        console.warn(res);
-        if (res.data.success === 1) {
+        // console.log("res", res);
+        if (res.data.validationErrors) {
           setIsSuccess({
-            message: "Modification de l'article validée",
-            uploadOk: res.data.success,
+            message:
+              "Modification de l'article refusé : " +
+              res.data.validationErrors[0].message,
+            uploadOk: 0,
           });
         } else {
+          console.log("res", res);
           setIsSuccess({
-            message: "Modification de l'article refusée",
+            message: "Modification de l'article validé",
             uploadOk: res.data.success,
           });
         }
-      });
+      })
+      .catch(
+        (err) =>
+          console.log("err", err) ||
+          setIsSuccess({
+            message:
+              "Modification de l'article refusé : " + err.response.data.message,
+            uploadOk: err.response.data.success,
+          })
+      );
   };
 
-  console.log("FormData", FormData);
+  // console.log("FormData", FormData);
 
   useEffect(() => {
     if (isSuccess?.uploadOk) {

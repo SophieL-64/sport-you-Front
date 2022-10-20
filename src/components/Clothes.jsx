@@ -12,9 +12,7 @@ const Clothes = (props) => {
     setShowModal((prev) => !prev);
   };
 
-  useEffect(() => {
-    console.log("chaton");
-  }, [showModal]);
+  useEffect(() => {}, [showModal]);
 
   return (
     <div
@@ -26,7 +24,7 @@ const Clothes = (props) => {
             key={clothe.id}
             className="eachClothe"
             onClick={() => {
-              console.log("id", clothe.id);
+              // console.log("id", clothe.id);
               setId(clothe.id);
               openModal();
             }}

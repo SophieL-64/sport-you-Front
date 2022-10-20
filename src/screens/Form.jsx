@@ -22,7 +22,7 @@ const Form = (props) => {
   const rates = [0, 1, 2, 3, 4, 5];
 
   useEffect(() => {
-    axios.get("http://localhost:5000/formInputs/inputTypes").then((res) => {
+    axios.get("http://localhost:5000/feedbacks/inputTypes").then((res) => {
       setInputsTypes(res.data);
     });
   }, []);
@@ -38,20 +38,20 @@ const Form = (props) => {
   const maxLength = 1000;
   const char = maxLength - comment?.length;
 
-  console.log(
-    "firstName",
-    firstName,
-    "lastName",
-    lastName,
-    "email",
-    email,
-    "rateGiven",
-    rateGiven,
-    "comment",
-    comment,
-    "typeSelectedId",
-    typeSelectedId
-  );
+  // console.log(
+  //   "firstName",
+  //   firstName,
+  //   "lastName",
+  //   lastName,
+  //   "email",
+  //   email,
+  //   "rateGiven",
+  //   rateGiven,
+  //   "comment",
+  //   comment,
+  //   "typeSelectedId",
+  //   typeSelectedId
+  // );
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
@@ -61,11 +61,11 @@ const Form = (props) => {
       email: email,
       rate: rateGiven,
       comment: comment,
-      formInputsTypes_id: typeSelectedId,
+      feedbacksTypes_id: typeSelectedId,
     };
     axios
       .post(
-        console.log("data sent", data) || "http://localhost:5000/formInputs/",
+        console.log("data sent", data) || "http://localhost:5000/feedbacks/",
         data
       )
       .then((res) => {

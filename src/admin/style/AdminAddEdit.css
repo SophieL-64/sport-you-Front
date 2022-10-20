@@ -52,3 +52,15 @@
 .adminBox {
   padding: 0.5rem;
 }
+
+.yellow {
+  background-color: var(--second-color);
+}
+
+.orange {
+  background-color: var(--third-color);
+}
+
+.red {
+  background-color: var(--fourth-color);
+}

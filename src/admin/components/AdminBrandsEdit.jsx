@@ -37,7 +37,7 @@ const AdminBrandsEdit = () => {
       });
   }, []);
 
-  console.log("defaultValue", defaultValue);
+  // console.log("defaultValue", defaultValue);
 
   const editImg = (event) => {
     setBrandImage({
@@ -65,22 +65,35 @@ const AdminBrandsEdit = () => {
         },
       })
       .then((res) => {
-        console.warn(res);
-        if (res.data.success === 1) {
+        // console.log("res", res);
+        if (res.data.validationErrors) {
+          setIsSuccess({
+            message:
+              "Modification de la marque refusée : " +
+              res.data.validationErrors[0].message,
+            uploadOk: 0,
+          });
+        } else {
+          console.log("res", res);
           setIsSuccess({
             message: "Modification de la marque validée",
             uploadOk: res.data.success,
           });
-        } else {
-          setIsSuccess({
-            message: "Modification de la marque refusée",
-            uploadOk: res.data.success,
-          });
         }
-      });
+      })
+      .catch(
+        (err) =>
+          console.log("err", err) ||
+          setIsSuccess({
+            message:
+              "Modification de la marque refusée : " +
+              err.response.data.message,
+            uploadOk: err.response.data.success,
+          })
+      );
   };
 
-  console.log("FormData", FormData);
+  // console.log("FormData", FormData);
 
   useEffect(() => {
     if (isSuccess?.uploadOk) {

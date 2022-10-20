@@ -25,13 +25,13 @@ const AdminSectionsEdit = () => {
         },
       })
       .then((res) => {
-        console.log("res.data", res.data[0].name);
+        // console.log("res.data", res.data[0].name);
         setDefaultValue(res.data[0]);
         setSectionName(res.data[0].name);
       });
   }, []);
 
-  console.log("sectionName", sectionName);
+  // console.log("sectionName", sectionName);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -46,19 +46,31 @@ const AdminSectionsEdit = () => {
         },
       })
       .then((res) => {
-        console.warn(res);
-        if (res.data.success === 1) {
+        // console.log("res", res);
+        if (res.data.validationErrors) {
           setIsSuccess({
-            message: "Modification du rayon validée",
-            uploadOk: res.data.success,
+            message:
+              "Modification du rayon refusé : " +
+              res.data.validationErrors[0].message,
+            uploadOk: 0,
           });
         } else {
+          console.log("res", res);
           setIsSuccess({
-            message: "Modification du rayon refusée",
+            message: "Modification du rayon validé",
             uploadOk: res.data.success,
           });
         }
-      });
+      })
+      .catch(
+        (err) =>
+          console.log("err", err) ||
+          setIsSuccess({
+            message:
+              "Modification du rayon refusé : " + err.response.data.message,
+            uploadOk: err.response.data.success,
+          })
+      );
   };
 
   useEffect(() => {

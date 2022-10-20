@@ -100,26 +100,7 @@ const AdminClothesAdd = () => {
       filepreview: URL.createObjectURL(event.target.files[0]),
     });
   };
-  console.log(
-    "clotheName",
-    clotheName,
-    "clotheDescription",
-    clotheDescription,
-    "clotheImage.file",
-    clotheImage.file,
-    "clothePrice",
-    clothePrice,
-    "clotheSectionId",
-    clotheSectionId,
-    "clotheBrandId",
-    clotheBrandId,
-    "clotheTargetId",
-    clotheTargetId,
-    "clotheSizesId",
-    clotheSizesId,
-    "clotheColorsId",
-    clotheColorsId
-  );
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -142,19 +123,30 @@ const AdminClothesAdd = () => {
         },
       })
       .then((res) => {
-        console.warn(res);
-        if (res.data.success === 1) {
+        // console.log("res", res);
+        if (res.data.validationErrors) {
+          setIsSuccess({
+            message:
+              "Ajout de l'article refusé : " +
+              res.data.validationErrors[0].message,
+            uploadOk: 0,
+          });
+        } else {
+          console.log("res", res);
           setIsSuccess({
             message: "Ajout de l'article validé",
             uploadOk: res.data.success,
           });
-        } else {
-          setIsSuccess({
-            message: "Ajout de l'article refusé",
-            uploadOk: res.data.success,
-          });
         }
-      });
+      })
+      .catch(
+        (err) =>
+          console.log("err", err) ||
+          setIsSuccess({
+            message: "Ajout de l'article refusé : " + err.response.data.message,
+            uploadOk: err.response.data.success,
+          })
+      );
   };
 
   useEffect(() => {
@@ -267,6 +259,7 @@ const AdminClothesAdd = () => {
             type="number"
             id="adminPrice"
             name="adminPrice"
+            max="999"
             placeholder="prix de l'article"
             onChange={(e) => setClothePrice(e.target.value)}
             required

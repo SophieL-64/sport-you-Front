@@ -22,13 +22,13 @@ const AdminColorsAdd = () => {
       filepreview: URL.createObjectURL(event.target.files[0]),
     });
   };
-  console.log(
-    "colorName",
-    colorName,
-    "colorImage.file",
-    colorImage.file,
-    "clothePrice"
-  );
+  // console.log(
+  //   "colorName",
+  //   colorName,
+  //   "colorImage.file",
+  //   colorImage.file,
+  //   "clothePrice"
+  // );
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -44,19 +44,31 @@ const AdminColorsAdd = () => {
         },
       })
       .then((res) => {
-        console.warn(res);
-        if (res.data.success === 1) {
+        // console.log("res", res);
+        if (res.data.validationErrors) {
+          setIsSuccess({
+            message:
+              "Ajout de la couleur refusé : " +
+              res.data.validationErrors[0].message,
+            uploadOk: 0,
+          });
+        } else {
+          console.log("res", res);
           setIsSuccess({
             message: "Ajout de la couleur validé",
             uploadOk: res.data.success,
           });
-        } else {
-          setIsSuccess({
-            message: "Ajout de la couleur refusé",
-            uploadOk: res.data.success,
-          });
         }
-      });
+      })
+      .catch(
+        (err) =>
+          console.log("err", err) ||
+          setIsSuccess({
+            message:
+              "Ajout de la couleur refusé : " + err.response.data.message,
+            uploadOk: err.response.data.success,
+          })
+      );
   };
 
   useEffect(() => {
@@ -95,12 +107,12 @@ const AdminColorsAdd = () => {
               id="adminName"
               name="adminName"
               placeholder="nom de la couleur"
-              maxLength="100"
+              maxLength="45"
               onChange={(e) => setColorName(e.target.value)}
               required
             />
             <p className="char">
-              {colorName && 100 - colorName.length} caractères restants
+              {colorName && 45 - colorName.length} caractères restants
             </p>
           </div>
         </div>

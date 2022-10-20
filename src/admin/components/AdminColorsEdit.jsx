@@ -35,7 +35,7 @@ const AdminColorsEdit = () => {
       });
   }, []);
 
-  console.log("defaultValue", defaultValue);
+  // console.log("defaultValue", defaultValue);
 
   const editImg = (event) => {
     setColorImage({
@@ -61,22 +61,35 @@ const AdminColorsEdit = () => {
         },
       })
       .then((res) => {
-        console.warn(res);
-        if (res.data.success === 1) {
+        // console.log("res", res);
+        if (res.data.validationErrors) {
           setIsSuccess({
-            message: "Modification de la couleur validée",
-            uploadOk: res.data.success,
+            message:
+              "Modification de la couleur refusé : " +
+              res.data.validationErrors[0].message,
+            uploadOk: 0,
           });
         } else {
+          console.log("res", res);
           setIsSuccess({
-            message: "Modification de la couleur refusée",
+            message: "Modification de la couleur validé",
             uploadOk: res.data.success,
           });
         }
-      });
+      })
+      .catch(
+        (err) =>
+          console.log("err", err) ||
+          setIsSuccess({
+            message:
+              "Modification de la couleur refusé : " +
+              err.response.data.message,
+            uploadOk: err.response.data.success,
+          })
+      );
   };
 
-  console.log("FormData", FormData);
+  // console.log("FormData", FormData);
 
   useEffect(() => {
     if (isSuccess?.uploadOk) {
@@ -119,7 +132,7 @@ const AdminColorsEdit = () => {
               onChange={(e) => setColorName(e.target.value)}
             />
             <p className="char">
-              {colorName && 100 - colorName.length} caractères restants
+              {colorName && 45 - colorName.length} caractères restants
             </p>
           </div>
         </div>

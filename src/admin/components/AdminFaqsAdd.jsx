@@ -1,46 +1,24 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
-import { useParams } from "react-router-dom";
 import { useAdmin } from "../../contexts/AdminProvider";
-
 import "../style/AdminAddEdit.css";
 
-const AdminTargetsEdit = () => {
-  let params = useParams();
-  let { id } = params;
-  const { adminToken } = useAdmin();
-
-  const [defaultValue, setDefaultValue] = useState({});
-  const [targetName, setTargetName] = useState("");
+const AdminFaqsAdd = () => {
+  const [questionAdded, setQuestionAdded] = useState("");
+  const [answerAdded, setAnswerAdded] = useState("");
   const [isSuccess, setIsSuccess] = useState(null);
   const navigate = useNavigate();
+  const { adminToken } = useAdmin();
 
-  //charge données pré-existantes : table sections //
-  useEffect(() => {
-    axios
-      .get(`http://localhost:5000/targets/edit/${id}`, {
-        headers: {
-          authorization: "bearer " + adminToken.token,
-        },
-      })
-      .then((res) => {
-        // console.log("res.data", res.data[0].name);
-        setDefaultValue(res.data[0]);
-        setTargetName(res.data[0].name);
-      });
-  }, []);
-
-  // console.log("targetName", targetName);
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const data = {
-      name: targetName,
+      question: questionAdded,
+      answer: answerAdded,
     };
-
     axios
-      .put(`http://localhost:5000/targets/${id}`, data, {
+      .post("http://localhost:5000/faqs", data, {
         headers: {
           authorization: "bearer " + adminToken.token,
         },
@@ -50,14 +28,14 @@ const AdminTargetsEdit = () => {
         if (res.data.validationErrors) {
           setIsSuccess({
             message:
-              "Modification de la cible commerciale refusée : " +
+              "Ajout de la question refusé : " +
               res.data.validationErrors[0].message,
             uploadOk: 0,
           });
         } else {
           console.log("res", res);
           setIsSuccess({
-            message: "Modification de la cible commerciale validée",
+            message: "Ajout de la question validé",
             uploadOk: res.data.success,
           });
         }
@@ -67,8 +45,7 @@ const AdminTargetsEdit = () => {
           console.log("err", err) ||
           setIsSuccess({
             message:
-              "Modification de la cible commerciale refusée : " +
-              err.response.data.message,
+              "Ajout de la question refusé : " + err.response.data.message,
             uploadOk: err.response.data.success,
           })
       );
@@ -94,29 +71,48 @@ const AdminTargetsEdit = () => {
 
   return (
     <div>
-      <Link to="/admin/targets">
+      <Link to="/admin/faqs">
         <p className="return">Retour</p>
       </Link>
-      <h1 className="adminTitle">Modification de la cible commerciale</h1>
-
+      <h1 className="adminTitle orange">Ajout d'une question</h1>
       <form className="adminForm" action="submit" onSubmit={handleSubmit}>
         <div className="adminChamp">
-          <label className="adminLabel" htmlFor="adminSection">
-            Nom de la cible commerciale
+          <label className="adminLabel" htmlFor="adminQuestion">
+            Question
           </label>
           <div>
             <input
               className="adminInput"
               type="text"
-              id="adminTarget"
-              name="adminTarget"
-              value={targetName}
-              maxLength="45"
-              onChange={(e) => setTargetName(e.target.value)}
+              id="adminQuestion"
+              name="adminQuestion"
+              placeholder="question à ajouter"
+              maxLength="1000"
+              onChange={(e) => setQuestionAdded(e.target.value)}
               required
             />
             <p className="char">
-              {targetName && 45 - targetName.length} caractères restants
+              {questionAdded && 1000 - questionAdded.length} caractères restants
+            </p>
+          </div>
+        </div>
+        <div className="adminChamp">
+          <label className="adminLabel" htmlFor="adminAnswer">
+            Réponse
+          </label>
+          <div>
+            <input
+              className="adminInput"
+              type="text"
+              id="adminAnswer"
+              name="adminAnswer"
+              placeholder="réponse correspondante"
+              maxLength="1000"
+              onChange={(e) => setAnswerAdded(e.target.value)}
+              required
+            />
+            <p className="char">
+              {answerAdded && 1000 - answerAdded.length} caractères restants
             </p>
           </div>
         </div>
@@ -125,12 +121,12 @@ const AdminTargetsEdit = () => {
             <h4 style={styles.isUpload}>{isSuccess.message}</h4>
           ) : null}
         </div>
-        <button className="formButton" type="submit">
-          Modifier
+        <button className="formButton orange" type="submit">
+          Ajouter
         </button>
       </form>
     </div>
   );
 };
 
-export default AdminTargetsEdit;
+export default AdminFaqsAdd;

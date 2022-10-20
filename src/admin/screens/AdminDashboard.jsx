@@ -8,13 +8,13 @@ import "../style/Admin.css";
 const Dashboard = () => {
   return (
     <>
-      <h1 className="adminTitle">Bienvenue sur le dashboard</h1>
+      <h1 className="adminTitle">Bienvenue sur le tableau de bord</h1>
       <Link to="/logout">
         <Logout />
       </Link>
       <div className="admin">
         <Link to={`/admin/admins`}>
-          <button className="adminEntry">
+          <button className="adminEntry red">
             Gérer les comptes administrateurs
           </button>
         </Link>
@@ -41,8 +41,8 @@ const Dashboard = () => {
             Gérer les feedbacks des clients
           </button>
         </Link>
-        <Link to={`/admin/faq`}>
-          <button className="adminEntry light-blue">Gérer les FAQ</button>
+        <Link to={`/admin/faqs`}>
+          <button className="adminEntry orange">Gérer les FAQ</button>
         </Link>
       </div>
     </>

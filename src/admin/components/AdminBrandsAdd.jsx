@@ -40,19 +40,30 @@ const AdminBrandsAdd = () => {
         },
       })
       .then((res) => {
-        console.warn(res);
-        if (res.data.success === 1) {
+        // console.log("res", res);
+        if (res.data.validationErrors) {
+          setIsSuccess({
+            message:
+              "Ajout de la marque refusé : " +
+              res.data.validationErrors[0].message,
+            uploadOk: 0,
+          });
+        } else {
+          console.log("res", res);
           setIsSuccess({
             message: "Ajout de la marque validé",
             uploadOk: res.data.success,
           });
-        } else {
-          setIsSuccess({
-            message: "Ajout de la marque refusé",
-            uploadOk: res.data.success,
-          });
         }
-      });
+      })
+      .catch(
+        (err) =>
+          console.log("err", err) ||
+          setIsSuccess({
+            message: "Ajout de la marque refusé : " + err.response.data.message,
+            uploadOk: err.response.data.success,
+          })
+      );
   };
 
   useEffect(() => {
