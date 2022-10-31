@@ -23,7 +23,6 @@ const Sections = () => {
 
   return (
     <>
-      {console.log("sections", sections)}
       <Link to="/admin/dashboard">
         <p className="return">Retour</p>
       </Link>

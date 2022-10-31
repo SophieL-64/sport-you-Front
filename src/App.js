@@ -26,17 +26,21 @@ import AdminColorsAdd from "./admin/components/AdminColorsAdd";
 import AdminColorsEdit from "./admin/components/AdminColorsEdit";
 import AdminBrands from "./admin/screens/AdminBrands";
 import AdminBrandsAll from "./admin/components/AdminBrandsAll";
-// import AdminBrandsAdd from "./admin/components/AdminBrandsAdd";
-// import AdminBrandsEdit from "./admin/components/AdminBrandsEdit";
+import AdminBrandsAdd from "./admin/components/AdminBrandsAdd";
+import AdminBrandsEdit from "./admin/components/AdminBrandsEdit";
 import AdminSections from "./admin/screens/AdminSections";
 import AdminSectionsAll from "./admin/components/AdminSectionsAll";
 import AdminSectionsAdd from "./admin/components/AdminSectionsAdd";
-// import AdminSectionsEdit from "./admin/components/AdminSectionsEdit";
+import AdminSectionsEdit from "./admin/components/AdminSectionsEdit";
 import AdminTargets from "./admin/screens/AdminTargets";
 import AdminTargetsAll from "./admin/components/AdminTargetsAll";
 import AdminTargetsAdd from "./admin/components/AdminTargetsAdd";
-// import AdminTargetsEdit from "./admin/components/AdminTargetsEdit";
+import AdminTargetsEdit from "./admin/components/AdminTargetsEdit";
 import AdminFeedbacks from "./admin/screens/AdminFeedbacks";
+import AdminFaqs from "./admin/screens/AdminFaqs";
+import AdminFaqsAll from "./admin/components/AdminFaqsAll";
+import AdminFaqsAdd from "./admin/components/AdminFaqsAdd";
+import AdminFaqsEdit from "./admin/components/AdminFaqsEdit";
 import AdminRoutes from "./admin/components/AdminRoutes";
 import "./App.css";
 import AdminProvider from "./contexts/AdminProvider";
@@ -46,8 +50,8 @@ function App() {
   const [opinions, setOpinions] = useState(null);
 
   useEffect(() => {
-    axios.get("http://localhost:5000/formInputs/opinions").then((res) => {
-      console.log(res.data) || setOpinions(res.data);
+    axios.get("http://localhost:5000/feedbacks/opinions").then((res) => {
+      // console.log(res.data) || setOpinions(res.data);
     });
   }, []);
 
@@ -140,7 +144,7 @@ function App() {
             />
             {/* ROUTES ADMIN */}
             <Route path="/login" element={<Login />} />
-            {/* DEPLACER DANS ROUTES PROTEGEES A LA FIN */}
+            {/* ROUTES PROTEGEES */}
             <Route path="/admin" element={<AdminRoutes />}>
               <Route path="logout" element={<Logout />} />
               <Route path="dashboard" element={<AdminDashboard />} />
@@ -154,27 +158,27 @@ function App() {
               <Route path="sizes" element={<AdminSizes />} />
               <Route path="sizesAll" element={<AdminSizesAll />} />
               <Route path="sizesAdd" element={<AdminSizesAdd />} />
-              {/* <Route path="sizesEdit/:id" element={<AdminSizesEdit />} /> */}
               <Route path="colors" element={<AdminColors />} />
               <Route path="colorsAll" element={<AdminColorsAll />} />
               <Route path="colorsAdd" element={<AdminColorsAdd />} />
               <Route path="colorsEdit/:id" element={<AdminColorsEdit />} />
               <Route path="brands" element={<AdminBrands />} />
               <Route path="brandsAll" element={<AdminBrandsAll />} />
-              {/* <Route path="brandsAdd" element={<AdminBrandsAdd />} />
-          <Route path="brandsEdit/:id" element={<AdminBrandsEdit />} /> */}
+              <Route path="brandsAdd" element={<AdminBrandsAdd />} />
+              <Route path="brandsEdit/:id" element={<AdminBrandsEdit />} />
               <Route path="sections" element={<AdminSections />} />
               <Route path="sectionsAll" element={<AdminSectionsAll />} />
               <Route path="sectionsAdd" element={<AdminSectionsAdd />} />
-              {/* <Route
-            path="sectionsEdit/:id"
-            element={<AdminSectionsEdit />}
-          /> */}
+              <Route path="sectionsEdit/:id" element={<AdminSectionsEdit />} />
               <Route path="targets" element={<AdminTargets />} />
               <Route path="targetsAll" element={<AdminTargetsAll />} />
               <Route path="targetsAdd" element={<AdminTargetsAdd />} />
-              {/* <Route path="targetsEdit/:id" element={<AdminTargetsEdit />} /> */}
+              <Route path="targetsEdit/:id" element={<AdminTargetsEdit />} />
               <Route path="feedbacks" element={<AdminFeedbacks />} />
+              <Route path="faqs" element={<AdminFaqs />} />
+              <Route path="faqsAll" element={<AdminFaqsAll />} />
+              <Route path="faqsAdd" element={<AdminFaqsAdd />} />
+              <Route path="faqsEdit/:id" element={<AdminFaqsEdit />} />
             </Route>
           </Routes>
         </AdminProvider>

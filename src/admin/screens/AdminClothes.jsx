@@ -26,7 +26,6 @@ const Clothes = () => {
 
   return (
     <>
-      {console.log("clothes in Good", clothes)}
       <Link to="/admin/dashboard">
         <p className="return">Retour</p>
       </Link>

@@ -4,42 +4,22 @@ import axios from "axios";
 import { useAdmin } from "../../contexts/AdminProvider";
 import "../style/AdminAddEdit.css";
 
-const AdminColorsAdd = () => {
-  const [colorName, setColorName] = useState("");
-  const [colorImage, setColorImage] = useState({
-    file: "",
-    filepreview: null,
-  });
-
+const AdminFaqsAdd = () => {
+  const [questionAdded, setQuestionAdded] = useState("");
+  const [answerAdded, setAnswerAdded] = useState("");
   const [isSuccess, setIsSuccess] = useState(null);
   const navigate = useNavigate();
   const { adminToken } = useAdmin();
 
-  const editImg = (event) => {
-    setColorImage({
-      ...colorImage,
-      file: event.target.files[0],
-      filepreview: URL.createObjectURL(event.target.files[0]),
-    });
-  };
-  // console.log(
-  //   "colorName",
-  //   colorName,
-  //   "colorImage.file",
-  //   colorImage.file,
-  //   "clothePrice"
-  // );
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const formdata = new FormData();
-    formdata.append("name", colorName);
-    formdata.append("image", colorImage.file);
-
+    const data = {
+      question: questionAdded,
+      answer: answerAdded,
+    };
     axios
-      .post(`http://localhost:5000/colors/`, formdata, {
+      .post("http://localhost:5000/faqs", data, {
         headers: {
-          "Content-Type": "multipart/form-data",
           authorization: "bearer " + adminToken.token,
         },
       })
@@ -48,14 +28,14 @@ const AdminColorsAdd = () => {
         if (res.data.validationErrors) {
           setIsSuccess({
             message:
-              "Ajout de la couleur refusé : " +
+              "Ajout de la question refusé : " +
               res.data.validationErrors[0].message,
             uploadOk: 0,
           });
         } else {
           console.log("res", res);
           setIsSuccess({
-            message: "Ajout de la couleur validé",
+            message: "Ajout de la question validé",
             uploadOk: res.data.success,
           });
         }
@@ -65,7 +45,7 @@ const AdminColorsAdd = () => {
           console.log("err", err) ||
           setIsSuccess({
             message:
-              "Ajout de la couleur refusé : " + err.response.data.message,
+              "Ajout de la question refusé : " + err.response.data.message,
             uploadOk: err.response.data.success,
           })
       );
@@ -91,56 +71,57 @@ const AdminColorsAdd = () => {
 
   return (
     <div>
-      <Link to="/admin/colors">
+      <Link to="/admin/faqs">
         <p className="return">Retour</p>
       </Link>
-      <h1 className="adminTitle">Ajout d'une couleur</h1>
+      <h1 className="adminTitle orange">Ajout d'une question</h1>
       <form className="adminForm" action="submit" onSubmit={handleSubmit}>
         <div className="adminChamp">
-          <label className="adminLabel" htmlFor="adminName">
-            Nom de la couleur
+          <label className="adminLabel" htmlFor="adminQuestion">
+            Question
           </label>
           <div>
             <input
               className="adminInput"
               type="text"
-              id="adminName"
-              name="adminName"
-              placeholder="nom de la couleur"
-              maxLength="45"
-              onChange={(e) => setColorName(e.target.value)}
+              id="adminQuestion"
+              name="adminQuestion"
+              placeholder="question à ajouter"
+              maxLength="1000"
+              onChange={(e) => setQuestionAdded(e.target.value)}
               required
             />
             <p className="char">
-              {colorName && 45 - colorName.length} caractères restants
+              {questionAdded && 1000 - questionAdded.length} caractères restants
             </p>
           </div>
         </div>
         <div className="adminChamp">
-          <label htmlFor="adminImage" className="adminLabel">
-            Image
+          <label className="adminLabel" htmlFor="adminAnswer">
+            Réponse
           </label>
-          <input
-            className="adminInput"
-            type="file"
-            name="colorImg"
-            onChange={editImg}
-            required
-          />
-          {colorImage.filepreview !== null ? (
-            <img
-              className="adminImgApercu"
-              src={colorImage.filepreview}
-              alt="UploadImage"
+          <div>
+            <input
+              className="adminInput"
+              type="text"
+              id="adminAnswer"
+              name="adminAnswer"
+              placeholder="réponse correspondante"
+              maxLength="1000"
+              onChange={(e) => setAnswerAdded(e.target.value)}
+              required
             />
-          ) : null}
+            <p className="char">
+              {answerAdded && 1000 - answerAdded.length} caractères restants
+            </p>
+          </div>
         </div>
         <div>
           {isSuccess !== null ? (
             <h4 style={styles.isUpload}>{isSuccess.message}</h4>
           ) : null}
         </div>
-        <button className="formButton" type="submit">
+        <button className="formButton orange" type="submit">
           Ajouter
         </button>
       </form>
@@ -148,4 +129,4 @@ const AdminColorsAdd = () => {
   );
 };
 
-export default AdminColorsAdd;
+export default AdminFaqsAdd;

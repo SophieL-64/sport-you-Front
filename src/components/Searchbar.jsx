@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import NoResult from "./NoResult";
+import { BsSearch } from "react-icons/bs";
 import "./Searchbar.css";
 
 const Searchbar = (props) => {
@@ -24,7 +25,7 @@ const Searchbar = (props) => {
   return (
     <>
       <div className="searchBar">
-        <label htmlFor="search">Recherche par mots-clés</label>
+        <BsSearch className="actionIcon" />
         <input
           id="search"
           name="search"

@@ -4,13 +4,14 @@ import axios from "axios";
 import { useAdmin } from "../../contexts/AdminProvider";
 import { Link } from "react-router-dom";
 import { MdEdit } from "react-icons/md";
-import { BsFillTrashFill } from "react-icons/bs";
+import { BsFillTrashFill, BsSearch } from "react-icons/bs";
 import "../style/AdminAll.css";
 
 const ClothesAll = (props) => {
   const { clothes, refresh, setRefresh } = props;
   const { adminToken } = useAdmin();
-  console.log("clothes in ClothesAll", clothes);
+  // console.log("clothes in ClothesAll", clothes);
+  const [searchInput, setSearchInput] = useState("");
 
   function deleteClothe(id) {
     axios
@@ -28,6 +29,19 @@ const ClothesAll = (props) => {
       <Link to={"/admin/clothesAdd"}>
         <button className="adminAddButton">Ajouter un article</button>
       </Link>
+      <div className="adminSearchBar">
+        <BsSearch className="actionIcon" />
+        <input
+          id="search"
+          name="search"
+          type="text"
+          placeholder="tapez votre recherche"
+          onChange={(e) => {
+            setSearchInput(e.target.value);
+          }}
+          className="adminSearchInput"
+        />
+      </div>
       <table className="adminTable">
         <thead>
           <tr>
@@ -43,30 +57,49 @@ const ClothesAll = (props) => {
         </thead>
         <tbody>
           {clothes &&
-            clothes.map((clothe) => (
-              <tr key={clothe.id}>
-                <td>{clothe.name}</td>
-                <td>{clothe.description}</td>
-                <td>{clothe.image}</td>
-                <td>{clothe.price}</td>
-                <td>{clothe.brand}</td>
-                <td>{clothe.section}</td>
-                <td>{clothe.target}</td>
-                <td>
-                  <Link to={`/admin/clothesEdit/${clothe.id}`}>
-                    <MdEdit className="actionIcon" color="black" />
-                  </Link>{" "}
-                  <BsFillTrashFill
-                    className="actionIcon"
-                    onClick={() => {
-                      window.confirm(
-                        `Êtes-vous sûr de vouloir supprimer cet article : ${clothe.name} ?`
-                      ) && deleteClothe(clothe.id);
-                    }}
-                  />
-                </td>
-              </tr>
-            ))}
+            clothes
+              .filter(
+                (clothe) =>
+                  clothe.name
+                    .toLowerCase()
+                    .includes(searchInput.toLowerCase()) ||
+                  clothe.description
+                    .toLowerCase()
+                    .includes(searchInput.toLowerCase()) ||
+                  clothe.brand
+                    .toLowerCase()
+                    .includes(searchInput.toLowerCase()) ||
+                  clothe.section
+                    .toLowerCase()
+                    .includes(searchInput.toLowerCase()) ||
+                  clothe.target
+                    .toLowerCase()
+                    .includes(searchInput.toLowerCase())
+              )
+              .map((clothe) => (
+                <tr key={clothe.id}>
+                  <td>{clothe.name}</td>
+                  <td>{clothe.description}</td>
+                  <td>{clothe.image}</td>
+                  <td>{clothe.price}</td>
+                  <td>{clothe.brand}</td>
+                  <td>{clothe.section}</td>
+                  <td>{clothe.target}</td>
+                  <td>
+                    <Link to={`/admin/clothesEdit/${clothe.id}`}>
+                      <MdEdit className="actionIcon" color="black" />
+                    </Link>{" "}
+                    <BsFillTrashFill
+                      className="actionIcon"
+                      onClick={() => {
+                        window.confirm(
+                          `Êtes-vous sûr de vouloir supprimer cet article : ${clothe.name} ?`
+                        ) && deleteClothe(clothe.id);
+                      }}
+                    />
+                  </td>
+                </tr>
+              ))}
         </tbody>
       </table>
     </div>

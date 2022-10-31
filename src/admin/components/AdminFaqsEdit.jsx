@@ -6,57 +6,42 @@ import { useAdmin } from "../../contexts/AdminProvider";
 
 import "../style/AdminAddEdit.css";
 
-const AdminColorsEdit = () => {
+const AdminFaqsEdit = () => {
   let params = useParams();
   let { id } = params;
   const { adminToken } = useAdmin();
 
   const [defaultValue, setDefaultValue] = useState({});
-  const [colorName, setColorName] = useState("");
-  const [colorImage, setColorImage] = useState({});
+  const [question, setQuestion] = useState("");
+  const [answer, setAnswer] = useState("");
   const [isSuccess, setIsSuccess] = useState(null);
   const navigate = useNavigate();
 
-  //charge données pré-existantes : table colors //
+  //charge données pré-existantes : table faqs //
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/colors/edit/${id}`, {
+      .get(`http://localhost:5000/faqs/edit/${id}`, {
         headers: {
-          "Content-Type": "multipart/form-data",
           authorization: "bearer " + adminToken.token,
         },
       })
       .then((res) => {
         setDefaultValue(res.data[0]);
-        setColorName(res.data[0].name);
-        setColorImage({
-          filepreview: res.data[0].image,
-        });
+        setQuestion(res.data[0].question);
+        setAnswer(res.data[0].answer);
       });
   }, []);
 
-  // console.log("defaultValue", defaultValue);
-
-  const editImg = (event) => {
-    setColorImage({
-      ...colorImage,
-      file: event.target.files[0],
-      filepreview: URL.createObjectURL(event.target.files[0]),
-    });
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    const formdata = new FormData();
-    colorName !== defaultValue.name && formdata.append("name", colorName);
-    colorImage.filepreview !== defaultValue.image &&
-      formdata.append("image", colorImage.file);
+    const data = {
+      question: question,
+      answer: answer,
+    };
 
     axios
-      .put(`http://localhost:5000/colors/${id}`, formdata, {
+      .put(`http://localhost:5000/faqs/${id}`, data, {
         headers: {
-          "Content-Type": "multipart/form-data",
-          Accept: "application/json",
           authorization: "bearer " + adminToken.token,
         },
       })
@@ -65,14 +50,14 @@ const AdminColorsEdit = () => {
         if (res.data.validationErrors) {
           setIsSuccess({
             message:
-              "Modification de la couleur refusé : " +
+              "Modification de la question refusée : " +
               res.data.validationErrors[0].message,
             uploadOk: 0,
           });
         } else {
           console.log("res", res);
           setIsSuccess({
-            message: "Modification de la couleur validé",
+            message: "Modification de la question validée",
             uploadOk: res.data.success,
           });
         }
@@ -82,14 +67,12 @@ const AdminColorsEdit = () => {
           console.log("err", err) ||
           setIsSuccess({
             message:
-              "Modification de la couleur refusé : " +
+              "Modification de la question refusée : " +
               err.response.data.message,
             uploadOk: err.response.data.success,
           })
       );
   };
-
-  // console.log("FormData", FormData);
 
   useEffect(() => {
     if (isSuccess?.uploadOk) {
@@ -111,59 +94,58 @@ const AdminColorsEdit = () => {
 
   return (
     <div>
-      <Link to="/admin/colors">
+      <Link to="/admin/faqs">
         <p className="return">Retour</p>
       </Link>
-      <h1 className="adminTitle">Modification de la couleur</h1>
+      <h1 className="adminTitle orange">Modification de la faq</h1>
 
       <form className="adminForm" action="submit" onSubmit={handleSubmit}>
         <div className="adminChamp">
-          <label className="adminLabel" htmlFor="adminName">
-            Nom de la couleur
+          <label className="adminLabel" htmlFor="adminQuestion">
+            Question
           </label>
           <div>
             <input
               className="adminInput"
               type="text"
-              id="adminName"
-              name="adminName"
-              value={colorName}
-              maxLength="100"
-              onChange={(e) => setColorName(e.target.value)}
+              id="adminQuestion"
+              name="adminQuestion"
+              value={question}
+              maxLength="1000"
+              onChange={(e) => setQuestion(e.target.value)}
+              required
             />
             <p className="char">
-              {colorName && 45 - colorName.length} caractères restants
+              {question && 1000 - question.length} caractères restants
             </p>
           </div>
         </div>
         <div className="adminChamp">
-          <label htmlFor="adminImage" className="adminLabel">
-            Image
+          <label className="adminLabel" htmlFor="adminAnswer">
+            Réponse
           </label>
-          <input
-            className="adminInput"
-            type="file"
-            name="image"
-            onChange={editImg}
-          />
-          {colorImage.filepreview ? (
-            <img
-              className="adminImgApercu"
-              src={
-                colorImage.filepreview != defaultValue.image
-                  ? colorImage.filepreview
-                  : `http://localhost:5000/images/colors/${colorImage.filepreview}`
-              }
-              alt="UploadImage"
+          <div>
+            <input
+              className="adminInput"
+              type="text"
+              id="adminAnswer"
+              name="adminAnswer"
+              value={answer}
+              maxLength="1000"
+              onChange={(e) => setAnswer(e.target.value)}
+              required
             />
-          ) : null}
+            <p className="char">
+              {answer && 1000 - answer.length} caractères restants
+            </p>
+          </div>
         </div>
         <div>
           {isSuccess !== null ? (
             <h4 style={styles.isUpload}>{isSuccess.message}</h4>
           ) : null}
         </div>
-        <button className="formButton" type="submit">
+        <button className="formButton orange" type="submit">
           Modifier
         </button>
       </form>
@@ -171,4 +153,4 @@ const AdminColorsEdit = () => {
   );
 };
 
-export default AdminColorsEdit;
+export default AdminFaqsEdit;

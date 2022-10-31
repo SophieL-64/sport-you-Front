@@ -29,13 +29,12 @@ const Footer = (props) => {
         (previousValue, currentValue) => previousValue + currentValue,
         0
       );
-    console.log("sumOfRates", sumOfRates, "nbOfRates", nbOfRates);
+    // console.log("sumOfRates", sumOfRates, "nbOfRates", nbOfRates);
     setAverageRate((sumOfRates / nbOfRates).toFixed(1));
   }, [opinions]);
 
   return (
     <div className="footer">
-      {console.log("opinions", opinions)}
       <div className="footer-section">
         <h2 className="footer-title">CONTACT</h2>
         <p className="footer-text">

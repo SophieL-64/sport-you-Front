@@ -57,17 +57,17 @@ const ShoppingCart = (props) => {
   }
 
   function removeFromBasket(product) {
-    console.log("basket State", basket);
-    console.log("product", product);
+    // console.log("basket State", basket);
+    // console.log("product", product);
     let basketLS = basket;
-    console.log("basketLS avant filtre", basketLS);
+    // console.log("basketLS avant filtre", basketLS);
     basketLS = basketLS.filter(
       (p) =>
         p.clothe !== product.clothe ||
         p.color !== product.color ||
         p.size !== product.size
     );
-    console.log("basketLS après filtre", basketLS);
+    // console.log("basketLS après filtre", basketLS);
     saveBasket(basketLS);
     setBasket(basketLS);
     setTotalItems((prev) => prev - product.quantity);
@@ -200,7 +200,7 @@ const ShoppingCart = (props) => {
                   <p
                     className="quantityChg plus"
                     onClick={() =>
-                      console.log("onclick", item, basket) ||
+                      // console.log("onclick", item, basket) ||
                       changeQuantity(item, +1)
                     }
                   >

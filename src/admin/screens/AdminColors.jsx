@@ -23,7 +23,6 @@ const Colors = () => {
 
   return (
     <>
-      {console.log("colors", colors)}
       <Link to="/admin/dashboard">
         <p className="return">Retour</p>
       </Link>

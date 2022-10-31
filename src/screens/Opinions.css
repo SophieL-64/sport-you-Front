@@ -11,7 +11,8 @@
   justify-items: center;
 }
 
-.opinionName {
+.opinionName,
+.opinionDate {
   color: white;
 }
 

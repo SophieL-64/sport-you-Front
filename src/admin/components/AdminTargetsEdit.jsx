@@ -1,45 +1,47 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 import { useAdmin } from "../../contexts/AdminProvider";
+
 import "../style/AdminAddEdit.css";
 
-const AdminColorsAdd = () => {
-  const [colorName, setColorName] = useState("");
-  const [colorImage, setColorImage] = useState({
-    file: "",
-    filepreview: null,
-  });
-
-  const [isSuccess, setIsSuccess] = useState(null);
-  const navigate = useNavigate();
+const AdminTargetsEdit = () => {
+  let params = useParams();
+  let { id } = params;
   const { adminToken } = useAdmin();
 
-  const editImg = (event) => {
-    setColorImage({
-      ...colorImage,
-      file: event.target.files[0],
-      filepreview: URL.createObjectURL(event.target.files[0]),
-    });
-  };
-  // console.log(
-  //   "colorName",
-  //   colorName,
-  //   "colorImage.file",
-  //   colorImage.file,
-  //   "clothePrice"
-  // );
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const [defaultValue, setDefaultValue] = useState({});
+  const [targetName, setTargetName] = useState("");
+  const [isSuccess, setIsSuccess] = useState(null);
+  const navigate = useNavigate();
 
-    const formdata = new FormData();
-    formdata.append("name", colorName);
-    formdata.append("image", colorImage.file);
+  //charge données pré-existantes : table sections //
+  useEffect(() => {
+    axios
+      .get(`http://localhost:5000/targets/edit/${id}`, {
+        headers: {
+          authorization: "bearer " + adminToken.token,
+        },
+      })
+      .then((res) => {
+        // console.log("res.data", res.data[0].name);
+        setDefaultValue(res.data[0]);
+        setTargetName(res.data[0].name);
+      });
+  }, []);
+
+  // console.log("targetName", targetName);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const data = {
+      name: targetName,
+    };
 
     axios
-      .post(`http://localhost:5000/colors/`, formdata, {
+      .put(`http://localhost:5000/targets/${id}`, data, {
         headers: {
-          "Content-Type": "multipart/form-data",
           authorization: "bearer " + adminToken.token,
         },
       })
@@ -48,14 +50,14 @@ const AdminColorsAdd = () => {
         if (res.data.validationErrors) {
           setIsSuccess({
             message:
-              "Ajout de la couleur refusé : " +
+              "Modification de la cible commerciale refusée : " +
               res.data.validationErrors[0].message,
             uploadOk: 0,
           });
         } else {
           console.log("res", res);
           setIsSuccess({
-            message: "Ajout de la couleur validé",
+            message: "Modification de la cible commerciale validée",
             uploadOk: res.data.success,
           });
         }
@@ -65,7 +67,8 @@ const AdminColorsAdd = () => {
           console.log("err", err) ||
           setIsSuccess({
             message:
-              "Ajout de la couleur refusé : " + err.response.data.message,
+              "Modification de la cible commerciale refusée : " +
+              err.response.data.message,
             uploadOk: err.response.data.success,
           })
       );
@@ -91,49 +94,31 @@ const AdminColorsAdd = () => {
 
   return (
     <div>
-      <Link to="/admin/colors">
+      <Link to="/admin/targets">
         <p className="return">Retour</p>
       </Link>
-      <h1 className="adminTitle">Ajout d'une couleur</h1>
+      <h1 className="adminTitle">Modification de la cible commerciale</h1>
+
       <form className="adminForm" action="submit" onSubmit={handleSubmit}>
         <div className="adminChamp">
-          <label className="adminLabel" htmlFor="adminName">
-            Nom de la couleur
+          <label className="adminLabel" htmlFor="adminSection">
+            Nom de la cible commerciale
           </label>
           <div>
             <input
               className="adminInput"
               type="text"
-              id="adminName"
-              name="adminName"
-              placeholder="nom de la couleur"
+              id="adminTarget"
+              name="adminTarget"
+              value={targetName}
               maxLength="45"
-              onChange={(e) => setColorName(e.target.value)}
+              onChange={(e) => setTargetName(e.target.value)}
               required
             />
             <p className="char">
-              {colorName && 45 - colorName.length} caractères restants
+              {targetName && 45 - targetName.length} caractères restants
             </p>
           </div>
-        </div>
-        <div className="adminChamp">
-          <label htmlFor="adminImage" className="adminLabel">
-            Image
-          </label>
-          <input
-            className="adminInput"
-            type="file"
-            name="colorImg"
-            onChange={editImg}
-            required
-          />
-          {colorImage.filepreview !== null ? (
-            <img
-              className="adminImgApercu"
-              src={colorImage.filepreview}
-              alt="UploadImage"
-            />
-          ) : null}
         </div>
         <div>
           {isSuccess !== null ? (
@@ -141,11 +126,11 @@ const AdminColorsAdd = () => {
           ) : null}
         </div>
         <button className="formButton" type="submit">
-          Ajouter
+          Modifier
         </button>
       </form>
     </div>
   );
 };
 
-export default AdminColorsAdd;
+export default AdminTargetsEdit;

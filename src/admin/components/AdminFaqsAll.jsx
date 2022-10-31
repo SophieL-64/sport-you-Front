@@ -1,20 +1,20 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useAdmin } from "../../contexts/AdminProvider";
-import { MdEdit } from "react-icons/md";
 import { Link } from "react-router-dom";
+import { MdEdit } from "react-icons/md";
 import { BsFillTrashFill, BsSearch } from "react-icons/bs";
 import "../style/AdminAll.css";
 
-const SectionsAll = (props) => {
-  const { sections, refresh, setRefresh } = props;
+const FaqsAll = (props) => {
+  const { faqs, refresh, setRefresh } = props;
   const { adminToken } = useAdmin();
-  // console.log("sections in SectionsAll", sections);
+  // console.log("faqs in FaqsAll", faqs);
   const [searchInput, setSearchInput] = useState("");
 
-  function deleteSection(id) {
+  function deleteFaq(id) {
     axios
-      .delete(`http://localhost:5000/sections/${id}`, {
+      .delete(`http://localhost:5000/faqs/${id}`, {
         headers: {
           authorization: "bearer " + adminToken.token,
         },
@@ -24,10 +24,10 @@ const SectionsAll = (props) => {
 
   return (
     <div className="adminPage">
-      <Link to={"/admin/sectionsAdd"}>
-        <button className="adminAddButton">Ajouter un rayon</button>
+      <Link to={"/admin/faqsAdd"}>
+        <button className="adminAddButton orange">Ajouter une question</button>
       </Link>
-      <div className="adminSearchBar">
+      <div className="adminSearchBar orange">
         <BsSearch className="actionIcon" />
         <input
           id="search"
@@ -43,29 +43,35 @@ const SectionsAll = (props) => {
       <table className="adminTable">
         <thead>
           <tr>
-            <td className="adminColumn">Rayon</td>
-            <td className="adminColumn">Actions</td>
+            <td className="adminColumn orange">Question</td>
+            <td className="adminColumn orange">Réponse</td>
+            <td className="adminColumn orange">Actions</td>
           </tr>
         </thead>
         <tbody>
-          {sections &&
-            sections
-              .filter((section) =>
-                section.name.toLowerCase().includes(searchInput.toLowerCase())
+          {faqs &&
+            faqs
+              .filter(
+                (faq) =>
+                  faq.question
+                    .toLowerCase()
+                    .includes(searchInput.toLowerCase()) ||
+                  faq.answer.toLowerCase().includes(searchInput.toLowerCase())
               )
-              .map((section) => (
-                <tr key={section.id}>
-                  <td>{section.name}</td>
+              .map((faq) => (
+                <tr key={faq.id}>
+                  <td>{faq.question}</td>
+                  <td>{faq.answer}</td>
                   <td>
-                    <Link to={`/admin/sectionsEdit/${section.id}`}>
+                    <Link to={`/admin/faqsEdit/${faq.id}`}>
                       <MdEdit className="actionIcon" color="black" />
                     </Link>{" "}
                     <BsFillTrashFill
                       className="actionIcon"
                       onClick={() => {
                         window.confirm(
-                          `Êtes-vous sûr de vouloir supprimer ce  rayon : ${section.name} ?`
-                        ) && deleteSection(section.id);
+                          `Êtes-vous sûr de vouloir supprimer cette question : ${faq.question} ?`
+                        ) && deleteFaq(faq.id);
                       }}
                     />
                   </td>
@@ -77,4 +83,4 @@ const SectionsAll = (props) => {
   );
 };
 
-export default SectionsAll;
+export default FaqsAll;

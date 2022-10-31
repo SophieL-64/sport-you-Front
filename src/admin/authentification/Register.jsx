@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAdmin } from "../../contexts/AdminProvider";
+import { BsFillEyeFill, BsFillEyeSlashFill } from "react-icons/bs";
 import axios from "axios";
 import "../style/Admin.css";
 
@@ -9,6 +10,7 @@ const Register = () => {
   const [adminEmail, setAdminEmail] = useState("");
   const [adminPassword, setAdminPassword] = useState("");
   const [isSuccess, setIsSuccess] = useState(null);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const navigate = useNavigate();
   const { adminToken } = useAdmin();
 
@@ -26,10 +28,12 @@ const Register = () => {
         },
       })
       .then((res) => {
-        console.log("res", res);
+        // console.log("res", res);
         if (res.data.validationErrors) {
           setIsSuccess({
-            message: res.data.validationErrors[0].message,
+            message:
+              "Ajout de l'administrateur refusé : " +
+              res.data.validationErrors[0].message,
             uploadOk: 0,
           });
         } else {
@@ -45,7 +49,8 @@ const Register = () => {
         (err) =>
           console.log("err", err) ||
           setIsSuccess({
-            message: err.response.data.message,
+            message:
+              "Ajout de l'administrateur refusé : " + err.response.data.message,
             uploadOk: err.response.data.success,
           })
       );
@@ -75,25 +80,32 @@ const Register = () => {
       <Link to="/admin/admins">
         <p className="return">Retour</p>
       </Link>
-      <h1 className="adminTitle">Ajout d'un administrateur</h1>
+      <h1 className="adminTitle red">Ajout d'un administrateur</h1>
       <form className="admin" onSubmit={handleRegister}>
         <div className="adminInfo">
           <label htmlFor="adminName">Prénom Nom</label>
-          <input
-            type="text"
-            id="adminName"
-            value={adminName}
-            onChange={(e) => {
-              setAdminName(e.target.value);
-            }}
-            required
-          />
+          <div>
+            <input
+              type="text"
+              id="adminName"
+              value={adminName}
+              maxLength="45"
+              onChange={(e) => {
+                setAdminName(e.target.value);
+              }}
+              required
+            />
+            <p className="char">
+              {adminName && 45 - adminName.length} caractères restants
+            </p>
+          </div>
         </div>
         <div className="adminInfo">
           <label htmlFor="adminEmail">Email</label>
           <input
             type="text"
             id="adminEmail"
+            maxLength="100"
             value={adminEmail}
             onChange={(e) => {
               setAdminEmail(e.target.value);
@@ -101,24 +113,45 @@ const Register = () => {
             required
           />
         </div>
-        <div className="adminInfo">
-          <label htmlFor="adminpassword">Mot de passe</label>
-          <input
-            type="password"
-            id="adminpassword"
-            value={adminPassword}
-            onChange={(e) => {
-              setAdminPassword(e.target.value);
-            }}
-            required
-          />
+        <div className="passwordPart">
+          <div className="adminInfo">
+            <label htmlFor="adminpassword">Mot de passe</label>
+            <input
+              type={isPasswordVisible ? "text" : "password"}
+              id="adminpassword"
+              minLength="4"
+              maxLength="100"
+              value={adminPassword}
+              onChange={(e) => {
+                setAdminPassword(e.target.value);
+              }}
+              required
+            />
+          </div>
+          <div className="eye">
+            {isPasswordVisible ? (
+              <BsFillEyeFill
+                className="actionIcon"
+                onClick={() => {
+                  setIsPasswordVisible(false);
+                }}
+              />
+            ) : (
+              <BsFillEyeSlashFill
+                className="actionIcon"
+                onClick={() => {
+                  setIsPasswordVisible(true);
+                }}
+              />
+            )}
+          </div>
         </div>
         <div>
           {isSuccess?.uploadOk != null ? (
             <h4 style={styles.isUpload}>{isSuccess.message}</h4>
           ) : null}
         </div>
-        <button className="adminButton" type="submit">
+        <button className="adminButton red" type="submit">
           Créer un compte
         </button>
       </form>

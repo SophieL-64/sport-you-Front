@@ -23,11 +23,10 @@ const Brands = () => {
 
   return (
     <>
-      {console.log("brands", brands)}
       <Link to="/admin/dashboard">
         <p className="return">Retour</p>
       </Link>
-      <h1 className="adminTitle">Gestion des couleurs</h1>
+      <h1 className="adminTitle">Gestion des marques</h1>
       <BrandsAll brands={brands} refresh={refresh} setRefresh={setRefresh} />
     </>
   );

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAdmin } from "../../contexts/AdminProvider";
+import { BsFillEyeFill, BsFillEyeSlashFill } from "react-icons/bs";
 import axios from "axios";
 import "../style/Admin.css";
 
@@ -8,6 +9,7 @@ const Login = () => {
   const [adminEmail, setAdminEmail] = useState("");
   const [adminPassword, setAdminPassword] = useState("");
   const [isSuccess, setIsSuccess] = useState(null);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const navigate = useNavigate();
   const { setAdminToken } = useAdmin();
 
@@ -20,14 +22,14 @@ const Login = () => {
     axios
       .post("http://localhost:5000/admins/login", data)
       .then((res) => {
-        console.log("res", res);
+        // console.log("res", res);
         if (res.data.validationErrors) {
           setIsSuccess({
             message: res.data.validationErrors[0].message,
             uploadOk: 0,
           });
         } else {
-          console.log("res", res);
+          // console.log("res", res);
           setIsSuccess({
             message: "Vous allez être redirigé(e) vers le tableau de bord",
             uploadOk: res.data.success,
@@ -82,18 +84,38 @@ const Login = () => {
             required
           />
         </div>
-        <div className="adminInfo">
-          <label htmlFor="adminpassword">mot de passe</label>
-          <input
-            type="password"
-            id="adminpassword"
-            value={adminPassword}
-            onChange={(e) => {
-              setAdminPassword(e.target.value);
-            }}
-            required
-          />
+        <div className="passwordPart">
+          <div className="adminInfo">
+            <label htmlFor="adminpassword">Mot de passe</label>
+            <input
+              type={isPasswordVisible ? "text" : "password"}
+              id="adminpassword"
+              value={adminPassword}
+              onChange={(e) => {
+                setAdminPassword(e.target.value);
+              }}
+              required
+            />
+          </div>
+          <div className="eye">
+            {isPasswordVisible ? (
+              <BsFillEyeFill
+                className="actionIcon"
+                onClick={() => {
+                  setIsPasswordVisible(false);
+                }}
+              />
+            ) : (
+              <BsFillEyeSlashFill
+                className="actionIcon"
+                onClick={() => {
+                  setIsPasswordVisible(true);
+                }}
+              />
+            )}
+          </div>
         </div>
+        {console.log("isPasswordVisible", isPasswordVisible)}
         <div>
           {isSuccess?.uploadOk != null ? (
             <h4 style={styles.isUpload}>{isSuccess.message}</h4>

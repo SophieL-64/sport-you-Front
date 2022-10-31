@@ -10,7 +10,7 @@ const Opinions = (props) => {
   const [opinions, setOpinions] = useState(null);
 
   useEffect(() => {
-    axios.get("http://localhost:5000/formInputs/opinions").then((res) => {
+    axios.get("http://localhost:5000/feedbacks/opinions").then((res) => {
       setOpinions(res.data);
     });
   }, []);
@@ -36,8 +36,17 @@ const Opinions = (props) => {
           opinions.map((opinion) => (
             <div className="eachOpinion" key={opinion.id}>
               <h2 className="opinionName">{opinion.firstname}</h2>
+              <p className="opinionDate">
+                Publié{" "}
+                {opinion.published === 0
+                  ? "aujourd'hui"
+                  : opinion.published === 1
+                  ? "avant-hier"
+                  : opinion.published < 7
+                  ? "il y a moins d'une semaine"
+                  : "il y a " + opinion.published + " jours"}
+              </p>
               <h2 className="opinionRate">{rating(opinion.rate)}</h2>
-              {console.log("opinion.rate", opinion.rate)}
               <p className="opinionComment">{opinion.comment}</p>
             </div>
           ))}

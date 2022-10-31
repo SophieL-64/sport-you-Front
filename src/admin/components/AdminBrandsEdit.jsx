@@ -6,21 +6,22 @@ import { useAdmin } from "../../contexts/AdminProvider";
 
 import "../style/AdminAddEdit.css";
 
-const AdminColorsEdit = () => {
+const AdminBrandsEdit = () => {
   let params = useParams();
   let { id } = params;
   const { adminToken } = useAdmin();
 
   const [defaultValue, setDefaultValue] = useState({});
-  const [colorName, setColorName] = useState("");
-  const [colorImage, setColorImage] = useState({});
+  const [brandName, setBrandName] = useState("");
+  const [brandImage, setBrandImage] = useState({});
+  const [brandCountry, setBrandCountry] = useState("");
   const [isSuccess, setIsSuccess] = useState(null);
   const navigate = useNavigate();
 
-  //charge données pré-existantes : table colors //
+  //charge données pré-existantes : table brands //
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/colors/edit/${id}`, {
+      .get(`http://localhost:5000/brands/edit/${id}`, {
         headers: {
           "Content-Type": "multipart/form-data",
           authorization: "bearer " + adminToken.token,
@@ -28,18 +29,19 @@ const AdminColorsEdit = () => {
       })
       .then((res) => {
         setDefaultValue(res.data[0]);
-        setColorName(res.data[0].name);
-        setColorImage({
-          filepreview: res.data[0].image,
+        setBrandName(res.data[0].name);
+        setBrandImage({
+          filepreview: res.data[0].logo,
         });
+        setBrandCountry(res.data[0].country);
       });
   }, []);
 
   // console.log("defaultValue", defaultValue);
 
   const editImg = (event) => {
-    setColorImage({
-      ...colorImage,
+    setBrandImage({
+      ...brandImage,
       file: event.target.files[0],
       filepreview: URL.createObjectURL(event.target.files[0]),
     });
@@ -48,12 +50,14 @@ const AdminColorsEdit = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const formdata = new FormData();
-    colorName !== defaultValue.name && formdata.append("name", colorName);
-    colorImage.filepreview !== defaultValue.image &&
-      formdata.append("image", colorImage.file);
+    brandName !== defaultValue.name && formdata.append("name", brandName);
+    brandImage.filepreview !== defaultValue.logo &&
+      formdata.append("logo", brandImage.file);
+    brandCountry !== defaultValue.country &&
+      formdata.append("country", brandCountry);
 
     axios
-      .put(`http://localhost:5000/colors/${id}`, formdata, {
+      .put(`http://localhost:5000/brands/${id}`, formdata, {
         headers: {
           "Content-Type": "multipart/form-data",
           Accept: "application/json",
@@ -65,14 +69,14 @@ const AdminColorsEdit = () => {
         if (res.data.validationErrors) {
           setIsSuccess({
             message:
-              "Modification de la couleur refusé : " +
+              "Modification de la marque refusée : " +
               res.data.validationErrors[0].message,
             uploadOk: 0,
           });
         } else {
           console.log("res", res);
           setIsSuccess({
-            message: "Modification de la couleur validé",
+            message: "Modification de la marque validée",
             uploadOk: res.data.success,
           });
         }
@@ -82,7 +86,7 @@ const AdminColorsEdit = () => {
           console.log("err", err) ||
           setIsSuccess({
             message:
-              "Modification de la couleur refusé : " +
+              "Modification de la marque refusée : " +
               err.response.data.message,
             uploadOk: err.response.data.success,
           })
@@ -111,15 +115,15 @@ const AdminColorsEdit = () => {
 
   return (
     <div>
-      <Link to="/admin/colors">
+      <Link to="/admin/brands">
         <p className="return">Retour</p>
       </Link>
-      <h1 className="adminTitle">Modification de la couleur</h1>
+      <h1 className="adminTitle">Modification de la marque</h1>
 
       <form className="adminForm" action="submit" onSubmit={handleSubmit}>
         <div className="adminChamp">
           <label className="adminLabel" htmlFor="adminName">
-            Nom de la couleur
+            Nom de la marque
           </label>
           <div>
             <input
@@ -127,18 +131,18 @@ const AdminColorsEdit = () => {
               type="text"
               id="adminName"
               name="adminName"
-              value={colorName}
+              value={brandName}
               maxLength="100"
-              onChange={(e) => setColorName(e.target.value)}
+              onChange={(e) => setBrandName(e.target.value)}
             />
             <p className="char">
-              {colorName && 45 - colorName.length} caractères restants
+              {brandName && 100 - brandName.length} caractères restants
             </p>
           </div>
         </div>
         <div className="adminChamp">
           <label htmlFor="adminImage" className="adminLabel">
-            Image
+            Logo
           </label>
           <input
             className="adminInput"
@@ -146,17 +150,36 @@ const AdminColorsEdit = () => {
             name="image"
             onChange={editImg}
           />
-          {colorImage.filepreview ? (
+          {brandImage.filepreview ? (
             <img
               className="adminImgApercu"
               src={
-                colorImage.filepreview != defaultValue.image
-                  ? colorImage.filepreview
-                  : `http://localhost:5000/images/colors/${colorImage.filepreview}`
+                brandImage.filepreview != defaultValue.logo
+                  ? brandImage.filepreview
+                  : `http://localhost:5000/images/brands/${brandImage.filepreview}`
               }
               alt="UploadImage"
             />
           ) : null}
+        </div>
+        <div className="adminChamp">
+          <label className="adminLabel" htmlFor="adminCountry">
+            Pays de la marque
+          </label>
+          <div>
+            <input
+              className="adminInput"
+              type="text"
+              id="adminCountry"
+              name="adminCountry"
+              value={brandCountry}
+              maxLength="100"
+              onChange={(e) => setBrandCountry(e.target.value)}
+            />
+            <p className="char">
+              {brandName && 100 - brandName.length} caractères restants
+            </p>
+          </div>
         </div>
         <div>
           {isSuccess !== null ? (
@@ -171,4 +194,4 @@ const AdminColorsEdit = () => {
   );
 };
 
-export default AdminColorsEdit;
+export default AdminBrandsEdit;
