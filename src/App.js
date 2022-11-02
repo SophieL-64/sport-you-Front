@@ -51,7 +51,7 @@ function App() {
 
   useEffect(() => {
     axios.get("http://localhost:5000/feedbacks/opinions").then((res) => {
-      // console.log(res.data) || setOpinions(res.data);
+      setOpinions(res.data);
     });
   }, []);
 
@@ -152,7 +152,10 @@ function App() {
               <Route path="admins" element={<AdminAdmins />} />
               <Route path="adminAll" element={<AdminAdminsAll />} />
               <Route path="clothes" element={<AdminClothes />} />
-              <Route path="clothesAll" element={<AdminClothesAll />} />
+              <Route
+                path="clothesAll"
+                element={<AdminClothesAll setTotalItems={setTotalItems} />}
+              />
               <Route path="clothesAdd" element={<AdminClothesAdd />} />
               <Route path="clothesEdit/:id" element={<AdminClothesEdit />} />
               <Route path="sizes" element={<AdminSizes />} />
