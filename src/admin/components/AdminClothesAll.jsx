@@ -8,10 +8,38 @@ import { BsFillTrashFill, BsSearch } from "react-icons/bs";
 import "../style/AdminAll.css";
 
 const ClothesAll = (props) => {
-  const { clothes, refresh, setRefresh } = props;
+  const { clothes, refresh, setRefresh, setTotalItems } = props;
   const { adminToken } = useAdmin();
   // console.log("clothes in ClothesAll", clothes);
   const [searchInput, setSearchInput] = useState("");
+  const [basket, setBasket] = useState([]);
+
+  useEffect(() => {
+    getBasket();
+  }, []);
+
+  // fonctions local storage--------------->
+
+  function saveBasket(basketLS) {
+    localStorage.setItem("basket", JSON.stringify(basketLS));
+  }
+
+  function getBasket() {
+    let basketLS = localStorage.getItem("basket");
+    if (basketLS == null) {
+      setBasket([]);
+    } else {
+      setBasket(JSON.parse(basketLS));
+    }
+  }
+
+  function removeFromBasket(productId) {
+    let basketLS = basket;
+    basketLS = basketLS.filter((p) => p.clothe !== productId);
+    saveBasket(basketLS);
+    setBasket(basketLS);
+    setTotalItems((prev) => prev - productId.quantity);
+  }
 
   function deleteClothe(id) {
     axios
@@ -21,7 +49,8 @@ const ClothesAll = (props) => {
           authorization: "bearer " + adminToken.token,
         },
       })
-      .then(() => setRefresh(!refresh));
+      .then(() => setRefresh(!refresh))
+      .then(removeFromBasket(id));
   }
 
   return (

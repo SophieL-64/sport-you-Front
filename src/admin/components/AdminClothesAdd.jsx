@@ -202,7 +202,7 @@ const AdminClothesAdd = () => {
               name="adminName"
               placeholder="nom de l'article"
               maxLength="100"
-              onChange={(e) => setClotheName(e.target.value)}
+              onChange={(e) => setClotheName(e.target.value.toUpperCase())}
               required
             />
             <p className="char">

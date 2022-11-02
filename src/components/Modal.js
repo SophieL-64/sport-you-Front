@@ -96,9 +96,9 @@ const ModalContent = styled.div`
   }
 
   .colorSquare {
-    width: 50%;
-    height: 50%;
-    border-radius: 5px;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
   }
 
   .colorClicked {
@@ -299,7 +299,7 @@ export const Modal = (props) => {
   // fermer le modal quand on clique en-dehors de la fenêtre
   const closeModal = (e) => {
     modalRef.current === e.target && setShowModal(false);
-    console.log(showModal);
+    // console.log(showModal);
   };
 
   // fermer le modal avec touche Echap du clavier
